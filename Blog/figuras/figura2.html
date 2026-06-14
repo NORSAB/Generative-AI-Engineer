@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mecanismo de Auto-Atención (Self-Attention)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    
+    #figura-atencion {
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-heading: #0F172A;
+      --text-body: #334155;
+      --accent-primary: #7C3AED;
+      --accent-secondary: #0891B2;
+      --border-color: #E2E8F0;
+      --border-radius: 12px;
+      --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-body);
+      margin: 0;
+      padding: 1rem;
+      background-color: var(--bg-page);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #figura-atencion * {
+      box-sizing: border-box;
+    }
+    #figura-atencion .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      width: 100%;
+      max-width: 800px;
+    }
+    #figura-atencion .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    #figura-atencion .badge {
+      display: inline-block;
+      align-self: flex-start;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.6rem;
+      background-color: var(--accent-secondary);
+      color: white;
+      border-radius: 4px;
+    }
+    #figura-atencion .card-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      color: var(--text-heading);
+      font-weight: 600;
+      margin: 0;
+    }
+    #figura-atencion .card-desc {
+      font-size: 0.95rem;
+      color: var(--text-body);
+      margin-bottom: 2rem;
+      opacity: 0.85;
+    }
+    #figura-atencion .toggle-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+    #figura-atencion .btn-toggle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 1.2rem;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-body);
+    }
+    #figura-atencion .btn-toggle:hover {
+      border-color: var(--accent-primary);
+    }
+    #figura-atencion .btn-toggle.active {
+      background-color: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+    #figura-atencion .attention-sentence-box {
+      background-color: var(--bg-page);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+      width: 100%;
+    }
+    #figura-atencion .attention-words {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    #figura-atencion .att-word {
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    #figura-atencion .att-word.highlight-focus {
+      background-color: rgba(124, 58, 237, 0.15);
+      color: var(--accent-primary);
+      outline: 2px solid var(--accent-primary);
+    }
+    #figura-atencion .att-word.highlight-focus-cyan {
+      background-color: rgba(8, 145, 178, 0.15);
+      color: var(--accent-secondary);
+      outline: 2px solid var(--accent-secondary);
+    }
+    #figura-atencion .att-word.highlight-target {
+      background-color: rgba(124, 58, 237, 0.08);
+      border-bottom: 3px solid var(--accent-primary);
+    }
+    #figura-atencion .att-word.highlight-target-cyan {
+      background-color: rgba(8, 145, 178, 0.08);
+      border-bottom: 3px solid var(--accent-secondary);
+    }
+    #figura-atencion .attention-viz-svg-wrapper {
+      width: 100%;
+      max-width: 500px;
+    }
+    #figura-atencion .attention-svg {
+      width: 100%;
+      height: 100px;
+      display: block;
+    }
+    #figura-atencion .glow-line {
+      filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.5));
+      stroke-dasharray: 8 6;
+      stroke-dashoffset: 0;
+      animation: flowLine 1.2s linear infinite;
+    }
+    #figura-atencion .glow-line-cyan {
+      filter: drop-shadow(0 2px 4px rgba(8, 145, 178, 0.5));
+      stroke-dasharray: 8 6;
+      stroke-dashoffset: 0;
+      animation: flowLine 1.2s linear infinite;
+    }
+    @keyframes flowLine {
+      to {
+        stroke-dashoffset: -28;
+      }
+    }
+    #figura-atencion .attention-caption {
+      font-size: 0.85rem;
+      color: var(--text-body);
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      background-color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 500px;
+    }
+    #figura-atencion .attention-caption svg {
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+    #figura-atencion .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+<div id="figura-atencion">
+  <div class="card glass-card">
+    <div class="card-header">
+      <span class="badge">FIGURA 2</span>
+      <h2>Mecanismo de Auto-Atención (Self-Attention)</h2>
+    </div>
+    <p class="card-desc">Cómo un Transformer recalcula el significado de una palabra conectándola dinámicamente con su contexto semántico.</p>
+
+    <div class="visual-container">
+      <div class="toggle-buttons">
+        <button class="btn-toggle active" id="btn-contexto-finanzas">Contexto A: Financiero</button>
+        <button class="btn-toggle" id="btn-contexto-mueble">Contexto B: Mobiliario</button>
+      </div>
+
+      <!-- Sentence A View -->
+      <div class="attention-sentence-box" id="sentence-finanzas">
+        <div class="attention-words">
+          <span class="att-word" data-id="1">El</span>
+          <span class="att-word highlight-focus" data-id="2">banco</span>
+          <span class="att-word" data-id="3">estaba</span>
+          <span class="att-word" data-id="4">lleno</span>
+          <span class="att-word" data-id="5">de</span>
+          <span class="att-word highlight-target" data-id="6">dinero</span>
+        </div>
+
+        <div class="attention-viz-svg-wrapper">
+          <svg viewBox="0 0 500 100" class="attention-svg">
+            <path d="M 110 30 Q 75 80 40 30" fill="none" stroke="#7C3AED" stroke-width="1" stroke-dasharray="2" opacity="0.4" />
+            <path d="M 110 30 Q 150 80 190 30" fill="none" stroke="#7C3AED" stroke-width="1.5" opacity="0.5" />
+            <path d="M 110 30 Q 190 90 270 30" fill="none" stroke="#7C3AED" stroke-width="2.5" opacity="0.7" />
+            <path d="M 110 30 Q 225 80 340 30" fill="none" stroke="#7C3AED" stroke-width="1" stroke-dasharray="2" opacity="0.3" />
+            <path d="M 110 30 Q 265 95 420 30" fill="none" stroke="#7C3AED" stroke-width="4.5" opacity="0.95" class="glow-line" />
+          </svg>
+        </div>
+        
+        <div class="attention-caption">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+          <span>El término <strong>"banco"</strong> recibe su mayor peso de atención (95%) de <strong>"dinero"</strong> y <strong>"lleno"</strong>, fijando su significado financiero.</span>
+        </div>
+      </div>
+
+      <!-- Sentence B View (Hidden initially) -->
+      <div class="attention-sentence-box hidden" id="sentence-mueble">
+        <div class="attention-words">
+          <span class="att-word" data-id="1">El</span>
+          <span class="att-word highlight-focus-cyan" data-id="2">banco</span>
+          <span class="att-word" data-id="3">estaba</span>
+          <span class="att-word highlight-target-cyan" data-id="4">pintado</span>
+          <span class="att-word" data-id="5">de</span>
+          <span class="att-word highlight-target-cyan" data-id="6">verde</span>
+        </div>
+
+        <div class="attention-viz-svg-wrapper">
+          <svg viewBox="0 0 500 100" class="attention-svg">
+            <path d="M 110 30 Q 75 80 40 30" fill="none" stroke="#0891B2" stroke-width="1" stroke-dasharray="2" opacity="0.3" />
+            <path d="M 110 30 Q 150 80 190 30" fill="none" stroke="#0891B2" stroke-width="1.5" opacity="0.5" />
+            <path d="M 110 30 Q 190 90 270 30" fill="none" stroke="#0891B2" stroke-width="4.0" opacity="0.9" class="glow-line-cyan" />
+            <path d="M 110 30 Q 225 80 340 30" fill="none" stroke="#0891B2" stroke-width="1" stroke-dasharray="2" opacity="0.3" />
+            <path d="M 110 30 Q 265 95 420 30" fill="none" stroke="#0891B2" stroke-width="4.5" opacity="0.95" class="glow-line-cyan" />
+          </svg>
+        </div>
+        
+        <div class="attention-caption">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+          <span>El término <strong>"banco"</strong> recibe su mayor peso de atención de <strong>"verde"</strong> y <strong>"pintado"</strong>, definiendo el significado de asiento.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const container = document.getElementById('figura-atencion');
+  if (!container) return;
+  const btnFinanzas = container.querySelector('#btn-contexto-finanzas');
+  const btnMueble = container.querySelector('#btn-contexto-mueble');
+  const sentenceFinanzas = container.querySelector('#sentence-finanzas');
+  const sentenceMueble = container.querySelector('#sentence-mueble');
+
+  btnFinanzas.addEventListener('click', () => {
+    btnFinanzas.classList.add('active');
+    btnMueble.classList.remove('active');
+    sentenceFinanzas.classList.remove('hidden');
+    sentenceMueble.classList.add('hidden');
+  });
+
+  btnMueble.addEventListener('click', () => {
+    btnMueble.classList.add('active');
+    btnFinanzas.classList.remove('active');
+    sentenceMueble.classList.remove('hidden');
+    sentenceFinanzas.classList.add('hidden');
+  });
+})();
+</script>
+</body>
+</html>
