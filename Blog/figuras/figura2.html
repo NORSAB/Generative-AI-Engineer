@@ -8,17 +8,39 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
     
      #figura-atencion {
-      --bg-page: #0B0F19;
-      --bg-card: rgba(17, 24, 39, 0.7);
-      --text-heading: #F8FAFC;
-      --text-body: #94A3B8;
-      --accent-primary: #A855F7;
-      --accent-secondary: #06B6D4;
-      --border-color: rgba(255, 255, 255, 0.08);
+      /* Light mode defaults */
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-heading: #0F172A;
+      --text-body: #334155;
+      --accent-primary: #7C3AED;
+      --accent-secondary: #0891B2;
+      --border-color: #E2E8F0;
       --border-radius: 12px;
-      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+      --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      --badge-bg: var(--accent-secondary);
+      --badge-color: #FFFFFF;
+      --btn-bg: rgba(30, 41, 59, 0.05);
+      --btn-border: #E2E8F0;
+      --btn-active-bg: var(--accent-primary);
+      --btn-active-text: #FFFFFF;
+      --box-bg: #F1F5F9;
+      
+      --word-focus-bg: rgba(124, 58, 237, 0.15);
+      --word-focus-text: #7C3AED;
+      --word-focus-outline: var(--accent-primary);
+      --word-focus-bg-cyan: rgba(8, 145, 178, 0.15);
+      --word-focus-text-cyan: #0891B2;
+      --word-focus-outline-cyan: var(--accent-secondary);
+      --word-target-bg: rgba(124, 58, 237, 0.08);
+      --word-target-border: var(--accent-primary);
+      --word-target-bg-cyan: rgba(8, 145, 178, 0.08);
+      --word-target-border-cyan: var(--accent-secondary);
+      --caption-bg: #FFFFFF;
+
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-body);
       margin: 0;
@@ -30,6 +52,41 @@
       justify-content: center;
       box-sizing: border-box;
     }
+
+    @media (prefers-color-scheme: dark) {
+      #figura-atencion {
+        --bg-page: #0B0F19;
+        --bg-card: rgba(17, 24, 39, 0.7);
+        --text-heading: #F8FAFC;
+        --text-body: #94A3B8;
+        --accent-primary: #A855F7;
+        --accent-secondary: #06B6D4;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        
+        --badge-bg: var(--accent-secondary);
+        --badge-color: #0B0F19;
+        --btn-bg: rgba(30, 41, 59, 0.4);
+        --btn-border: var(--border-color);
+        --btn-active-bg: var(--accent-primary);
+        --btn-active-text: #FFFFFF;
+        --box-bg: rgba(15, 23, 42, 0.4);
+        
+        --word-focus-bg: rgba(168, 85, 247, 0.2);
+        --word-focus-text: #D8B4FE;
+        --word-focus-outline: var(--accent-primary);
+        --word-focus-bg-cyan: rgba(6, 182, 212, 0.2);
+        --word-focus-text-cyan: #67E8F9;
+        --word-focus-outline-cyan: var(--accent-secondary);
+        --word-target-bg: rgba(168, 85, 247, 0.1);
+        --word-target-border: var(--accent-primary);
+        --word-target-bg-cyan: rgba(6, 182, 212, 0.1);
+        --word-target-border-cyan: var(--accent-secondary);
+        --caption-bg: rgba(30, 41, 59, 0.3);
+      }
+    }
+
     #figura-atencion * {
       box-sizing: border-box;
     }
@@ -58,8 +115,8 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       padding: 0.2rem 0.5rem;
-      background-color: var(--accent-secondary);
-      color: #0B0F19;
+      background-color: var(--badge-bg);
+      color: var(--badge-color);
       border-radius: 4px;
     }
     #figura-atencion .card-header h2 {
@@ -87,8 +144,8 @@
       font-size: 0.8rem;
       font-weight: 600;
       padding: 0.4rem 1rem;
-      background-color: rgba(30, 41, 59, 0.4);
-      border: 1px solid var(--border-color);
+      background-color: var(--btn-bg);
+      border: 1px solid var(--btn-border);
       border-radius: 6px;
       cursor: pointer;
       transition: var(--transition);
@@ -99,13 +156,13 @@
       color: var(--text-heading);
     }
     #figura-atencion .btn-toggle.active {
-      background-color: var(--accent-primary);
-      color: #FFFFFF;
+      background-color: var(--btn-active-bg);
+      color: var(--btn-active-text);
       border-color: var(--accent-primary);
       box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
     }
     #figura-atencion .attention-sentence-box {
-      background-color: rgba(15, 23, 42, 0.4);
+      background-color: var(--box-bg);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 1.25rem;
@@ -132,22 +189,22 @@
       cursor: pointer;
     }
     #figura-atencion .att-word.highlight-focus {
-      background-color: rgba(168, 85, 247, 0.2);
-      color: #D8B4FE;
-      outline: 1.5px dashed var(--accent-primary);
+      background-color: var(--word-focus-bg);
+      color: var(--word-focus-text);
+      outline: 1.5px dashed var(--word-focus-outline);
     }
     #figura-atencion .att-word.highlight-focus-cyan {
-      background-color: rgba(6, 182, 212, 0.2);
-      color: #67E8F9;
-      outline: 1.5px dashed var(--accent-secondary);
+      background-color: var(--word-focus-bg-cyan);
+      color: var(--word-focus-text-cyan);
+      outline: 1.5px dashed var(--word-focus-outline-cyan);
     }
     #figura-atencion .att-word.highlight-target {
-      background-color: rgba(168, 85, 247, 0.1);
-      border-bottom: 3px solid var(--accent-primary);
+      background-color: var(--word-target-bg);
+      border-bottom: 3px solid var(--word-target-border);
     }
     #figura-atencion .att-word.highlight-target-cyan {
-      background-color: rgba(6, 182, 212, 0.1);
-      border-bottom: 3px solid var(--accent-secondary);
+      background-color: var(--word-target-bg-cyan);
+      border-bottom: 3px solid var(--word-target-border-cyan);
     }
     #figura-atencion .attention-viz-svg-wrapper {
       width: 100%;
@@ -181,7 +238,7 @@
       display: flex;
       gap: 0.5rem;
       align-items: center;
-      background-color: rgba(30, 41, 59, 0.3);
+      background-color: var(--caption-bg);
       padding: 0.6rem 0.8rem;
       border-radius: 6px;
       border: 1px solid var(--border-color);
@@ -204,7 +261,6 @@
 <div id="figura-atencion">
   <div class="card glass-card">
     <div class="card-header">
-      <span class="badge">FIGURA 2</span>
       <h2>Mecanismo de Auto-Atención (Self-Attention)</h2>
     </div>
     <p class="card-desc">Cómo un Transformer recalcula el significado de una palabra conectándola dinámicamente con su contexto semántico.</p>
