@@ -44,7 +44,6 @@
       margin: 0;
       padding: 0.75rem;
       background-color: var(--bg-page);
-      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -291,39 +290,39 @@
         <div class="vector-space-wrapper">
           <svg class="vector-space" viewBox="0 0 300 200">
             <!-- Grid Lines -->
-            <line x1="35" y1="180" x2="280" y2="180" stroke="rgba(255, 255, 255, 0.08)" stroke-dasharray="4" />
-            <line x1="35" y1="20" x2="35" y2="180" stroke="rgba(255, 255, 255, 0.08)" stroke-dasharray="4" />
+            <line x1="35" y1="180" x2="280" y2="180" stroke="var(--grid-stroke)" stroke-dasharray="4" />
+            <line x1="35" y1="20" x2="35" y2="180" stroke="var(--grid-stroke)" stroke-dasharray="4" />
             
             <!-- Axis -->
-            <line x1="35" y1="180" x2="290" y2="180" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
-            <line x1="35" y1="10" x2="35" y2="180" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
-            <text x="280" y="195" font-size="9" fill="rgba(255, 255, 255, 0.4)" text-anchor="end">Dimensión X</text>
-            <text x="15" y="95" font-size="9" fill="rgba(255, 255, 255, 0.4)" transform="rotate(-90 15 95)" text-anchor="middle">Dimensión Y</text>
+            <line x1="35" y1="180" x2="290" y2="180" stroke="var(--axis-stroke)" stroke-width="1.5" />
+            <line x1="35" y1="10" x2="35" y2="180" stroke="var(--axis-stroke)" stroke-width="1.5" />
+            <text x="280" y="195" font-size="9" fill="var(--text-body)" text-anchor="end">Dimensión X</text>
+            <text x="15" y="95" font-size="9" fill="var(--text-body)" transform="rotate(-90 15 95)" text-anchor="middle">Dimensión Y</text>
 
             <!-- Clusters / Words -->
             <g class="cluster-tech">
-              <circle cx="220" cy="50" r="5" fill="#A855F7" stroke="#A855F7" stroke-width="1" class="node" data-word="learning" />
-              <circle cx="190" cy="65" r="5" fill="#A855F7" stroke="#A855F7" stroke-width="1" class="node" data-word="machine" />
-              <circle cx="205" cy="40" r="4" fill="rgba(168, 85, 247, 0.2)" stroke="#A855F7" stroke-width="1" />
-              <circle cx="230" cy="70" r="4" fill="rgba(168, 85, 247, 0.2)" stroke="#A855F7" stroke-width="1" />
-              <text x="228" y="53" font-size="9" fill="#F8FAFC" font-weight="600" stroke="none">learning</text>
-              <text x="148" y="68" font-size="9" fill="#F8FAFC" font-weight="600" stroke="none">machine</text>
-              <text x="190" y="32" font-size="8" fill="#C084FC" stroke="none">AI / Modelos</text>
+              <circle cx="220" cy="50" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="learning" />
+              <circle cx="190" cy="65" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="machine" />
+              <circle cx="205" cy="40" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
+              <circle cx="230" cy="70" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
+              <text x="228" y="53" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">learning</text>
+              <text x="148" y="68" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">machine</text>
+              <text x="190" y="32" font-size="8" fill="var(--accent-primary)" stroke="none">AI / Modelos</text>
             </g>
 
             <g class="cluster-infra">
-              <circle cx="95" cy="120" r="5" fill="#06B6D4" stroke="#06B6D4" stroke-width="1" class="node" data-word="puente" />
-              <circle cx="75" cy="140" r="4" fill="rgba(6, 182, 212, 0.2)" stroke="#06B6D4" stroke-width="1" />
-              <circle cx="115" cy="110" r="4" fill="rgba(6, 182, 212, 0.2)" stroke="#06B6D4" stroke-width="1" />
-              <text x="103" y="123" font-size="9" fill="#F8FAFC" font-weight="600" stroke="none">puente</text>
-              <text x="65" y="100" font-size="8" fill="#22D3EE" stroke="none">Estructura</text>
+              <circle cx="95" cy="120" r="5" fill="var(--accent-secondary)" stroke="var(--accent-secondary)" stroke-width="1" class="node" data-word="puente" />
+              <circle cx="75" cy="140" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
+              <circle cx="115" cy="110" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
+              <text x="103" y="123" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">puente</text>
+              <text x="65" y="100" font-size="8" fill="var(--accent-secondary)" stroke="none">Estructura</text>
             </g>
 
             <!-- Neutrals -->
-            <circle cx="65" cy="60" r="4" fill="#475569" />
-            <text x="73" y="63" font-size="8" fill="#94A3B8" stroke="none">El</text>
-            <circle cx="145" cy="130" r="4" fill="#475569" />
-            <text x="153" y="133" font-size="8" fill="#94A3B8" stroke="none">al</text>
+            <circle cx="65" cy="60" r="4" fill="var(--axis-stroke)" />
+            <text x="73" y="63" font-size="8" fill="var(--text-body)" stroke="none">El</text>
+            <circle cx="145" cy="130" r="4" fill="var(--axis-stroke)" />
+            <text x="153" y="133" font-size="8" fill="var(--text-body)" stroke="none">al</text>
           </svg>
         </div>
         <div class="vector-coords">
