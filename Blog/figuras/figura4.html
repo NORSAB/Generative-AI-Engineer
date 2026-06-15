@@ -102,7 +102,7 @@
       display: flex;
       flex-direction: column;
       height: calc(100vh - 1.5rem);
-      max-height: 520px;
+      max-height: 580px;
     }
 
     .card-header {
@@ -180,7 +180,7 @@
     .comp-column {
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 0.5rem;
+      padding: 0.75rem 0.5rem;
       display: flex;
       flex-direction: column;
       background-color: rgba(30, 41, 59, 0.01);
@@ -233,9 +233,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.4rem;
       margin: auto 0;
-      padding: 0.25rem 0;
+      padding: 0.35rem 0;
     }
 
     .flow-node {
@@ -243,13 +243,13 @@
       background: var(--step-bg);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 0.35rem 0.25rem;
+      padding: 0.45rem 0.35rem;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.35rem;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 500;
       transition: var(--transition);
     }
@@ -261,7 +261,7 @@
     }
 
     .flow-arrow {
-      height: 10px;
+      height: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -297,22 +297,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.1rem;
+      padding: 0.15rem;
       border: 1px dashed var(--graph-primary);
       border-radius: 6px;
       background: rgba(16, 185, 129, 0.05);
-      margin: 0.1rem 0;
+      margin: 0.15rem 0;
     }
     .kg-sub-diagram svg {
-      width: 45px;
-      height: 35px;
+      width: 48px;
+      height: 38px;
     }
 
     /* Special agent stack container node */
     .agent-stack-diagram {
       border: 1px dashed var(--agentic-primary);
       border-radius: 6px;
-      padding: 0.2rem;
+      padding: 0.25rem;
       width: 100%;
       background: rgba(6, 182, 212, 0.05);
       display: flex;
@@ -364,8 +364,8 @@
 
     /* Column Summary tags */
     .summary-tags {
-      margin-top: 0.5rem;
-      padding-top: 0.35rem;
+      margin-top: auto;
+      padding-top: 0.5rem;
       border-top: 1px dashed var(--border-color);
       display: flex;
       flex-wrap: wrap;
@@ -386,33 +386,6 @@
     .comp-column[data-type="graph"] .tag.primary-tag { background: var(--graph-bg); color: var(--graph-primary); }
     .comp-column[data-type="agentic"] .tag.primary-tag { background: var(--agentic-bg); color: var(--agentic-primary); }
 
-    /* Detail Box at the bottom */
-    .details-pane {
-      margin-top: 0.75rem;
-      border-left: 3px solid var(--classic-primary);
-      padding: 0.4rem 0.75rem;
-      background-color: var(--details-bg);
-      border-top: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-      border-radius: 0 8px 8px 0;
-      font-size: 0.75rem;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      transition: var(--transition);
-    }
-
-    .details-pane p {
-      margin: 0;
-      width: 100%;
-      line-height: 1.4;
-    }
-
-    .details-pane strong {
-      color: var(--text-heading);
-    }
-
     /* Responsive adjustments */
     @media (max-width: 700px) {
       .comp-tabs {
@@ -420,15 +393,47 @@
       }
       .columns-grid {
         grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+      /* Custom thin scrollbar */
+      .columns-grid::-webkit-scrollbar {
+        width: 4px;
+      }
+      .columns-grid::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .columns-grid::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 2px;
       }
       .comp-column {
         display: none;
+        min-height: auto;
+        padding: 0.4rem;
       }
       .comp-column.active-tab {
         display: flex;
       }
       .card {
-        max-height: 520px;
+        max-height: 580px;
+      }
+      .flow-diagram {
+        gap: 0.25rem;
+      }
+      .flow-node {
+        padding: 0.35rem 0.25rem;
+        font-size: 0.68rem;
+      }
+      .flow-arrow {
+        height: 10px;
+      }
+      .flow-arrow svg {
+        width: 8px;
+        height: 8px;
+      }
+      .summary-tags {
+        margin-top: 0.4rem;
+        padding-top: 0.3rem;
       }
     }
   </style>
@@ -650,11 +655,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Detail Box at the bottom (linked to selection) -->
-    <div class="details-pane" id="comp-details-box">
-      <p id="comp-explanation">Selecciona o pasa el cursor por una arquitectura para ver la descripción y su relevancia en el ecosistema de Databricks.</p>
-    </div>
   </div>
 </div>
 
@@ -665,20 +665,6 @@
 
   const columns = container.querySelectorAll('.comp-column');
   const tabs = container.querySelectorAll('.tab-btn');
-  const detailsPane = container.querySelector('#comp-details-box');
-  const explanationText = container.querySelector('#comp-explanation');
-
-  const explanations = {
-    classic: '<strong>Classic RAG (Búsqueda de Vectores Secuencial)</strong><br>Busca los fragmentos (chunks) más relevantes en base al coseno de similitud semántica. Es extremadamente rápido y simple de implementar. Ideal para consultas directas sobre documentación técnica en <strong>Mosaic AI Vector Search</strong>.',
-    graph: '<strong>Graph RAG (Búsqueda Semántica en Grafos de Conocimiento)</strong><br>Extrae entidades y relaciones semánticas del texto. Conecta ideas lejanas que no comparten palabras clave comunes. En Databricks se integra combinando tablas Delta estructuradas y algoritmos relacionales.',
-    agentic: '<strong>Agentic RAG (Agente Autónomo de Razonamiento)</strong><br>El modelo evalúa la consulta y decide qué herramientas usar (Vector DB, Web, APIs). Incluye un bucle de auto-corrección (Self-Evaluation) que valida si la respuesta cumple el criterio antes de entregarla. Soportado nativamente por <strong>Mosaic AI Agent Framework</strong>.'
-  };
-
-  const colors = {
-    classic: 'var(--classic-primary)',
-    graph: 'var(--graph-primary)',
-    agentic: 'var(--agentic-primary)'
-  };
 
   // Helper to switch active column details
   function activateCategory(type) {
@@ -705,10 +691,6 @@
         col.classList.add('active-tab');
       }
     });
-
-    // Details box
-    explanationText.innerHTML = explanations[type];
-    detailsPane.style.borderLeftColor = colors[type];
   }
 
   // Set default
