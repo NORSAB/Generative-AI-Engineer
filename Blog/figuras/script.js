@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // FIGURA 4: EVOLUCIÓN DE ARQUITECTURAS RAG
   // ==========================================
   const compColumns = document.querySelectorAll('.comp-column');
-  const compTabs = document.querySelectorAll('.tab-btn');
 
   if (compColumns.length > 0) {
     function activateCategory(type) {
@@ -98,20 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         col.classList.remove('active');
         if (col.getAttribute('data-type') === type) {
           col.classList.add('active');
-        }
-      });
-
-      compTabs.forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.getAttribute('data-target') === type) {
-          tab.classList.add('active');
-        }
-      });
-
-      compColumns.forEach(col => {
-        col.classList.remove('active-tab');
-        if (col.getAttribute('data-type') === type) {
-          col.classList.add('active-tab');
         }
       });
     }
@@ -122,13 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const type = col.getAttribute('data-type');
       col.addEventListener('mouseenter', () => activateCategory(type));
       col.addEventListener('click', () => activateCategory(type));
-    });
-
-    compTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.getAttribute('data-target');
-        activateCategory(target);
-      });
     });
   }
 
