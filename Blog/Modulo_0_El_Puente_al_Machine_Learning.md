@@ -83,6 +83,18 @@ Para estructurar una aplicación que no alucine y que conozca los datos internos
 
 <iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html" width="100%" height="430" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
 
+### La Evolución de RAG: Classic, Graph y Agentic
+
+No todos los flujos RAG se diseñan igual. A medida que las aplicaciones empresariales de IA se vuelven más robustas, las organizaciones evolucionan a través de tres niveles de recuperación de datos:
+
+* **Classic RAG**: Es el enfoque básico y veloz. La duda del usuario se convierte a embeddings, se buscan fragmentos similares en una base de datos vectorial y se le entregan al LLM para generar la respuesta.
+* **Graph RAG**: Conecta la información al extraer entidades y sus relaciones para mapearlas en un Grafo de Conocimiento (Knowledge Graph). Es la opción idónea cuando necesitas unir puntos sueltos entre múltiples fuentes de datos.
+* **Agentic RAG**: En lugar de seguir un camino lineal, delega el control en un agente de razonamiento. Este evalúa la consulta, invoca las herramientas necesarias (motores de búsqueda, APIs, bases de datos vectoriales) y valida de forma autónoma el resultado en un bucle de auto-corrección.
+
+Explora en este comparador interactivo cómo funciona cada esquema:
+
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html" width="100%" height="520" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
+
 ---
 
 ## Databricks vs. El Resto: Posicionamiento en el Mercado
