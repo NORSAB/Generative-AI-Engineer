@@ -81,19 +81,25 @@ Databricks engloba todo su desarrollo de IA generativa bajo la marca **Mosaic AI
 
 Para estructurar una aplicación que no alucine y que conozca los datos internos de tu empresa, usamos la arquitectura **RAG (Retrieval-Augmented Generation)**. A continuación, puedes ver cómo se orquesta este flujo paso a paso:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html" width="100%" height="430" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html" width="100%" height="320" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
+
+### El Flujo de Datos en RAG Paso a Paso:
+1. **Pregunta del Usuario (Query):** Escribes tu duda en lenguaje natural (ej. *"¿Cuál es la política de viáticos?"*). Esta pregunta se vectoriza al vuelo usando un modelo de embeddings.
+2. **Búsqueda Vectorial (Vector Search):** El vector de la pregunta se cruza con los índices en la base de datos de vectores (gobernada por **Unity Catalog** en Databricks) para traer los fragmentos de texto más parecidos semánticamente.
+3. **Prompt Enriquecido (Contexto):** Esos fragmentos recuperados se inyectan directamente dentro del prompt original como contexto extra, dándole al modelo información real e interna.
+4. **Generación / Inferencia LLM:** El LLM lee el prompt con su contexto y genera la respuesta mediante **Mosaic AI Serving**. Al basarse estrictamente en el texto provisto, se evitan las alucinaciones.
 
 ### La Evolución de RAG: Classic, Graph y Agentic
 
 No todos los flujos RAG se diseñan igual. A medida que las aplicaciones empresariales de IA se vuelven más robustas, las organizaciones evolucionan a través de tres niveles de recuperación de datos:
 
-* **Classic RAG**: Es el enfoque básico y veloz. La duda del usuario se convierte a embeddings, se buscan fragmentos similares en una base de datos vectorial y se le entregan al LLM para generar la respuesta.
-* **Graph RAG**: Conecta la información al extraer entidades y sus relaciones para mapearlas en un Grafo de Conocimiento (Knowledge Graph). Es la opción idónea cuando necesitas unir puntos sueltos entre múltiples fuentes de datos.
-* **Agentic RAG**: En lugar de seguir un camino lineal, delega el control en un agente de razonamiento. Este evalúa la consulta, invoca las herramientas necesarias (motores de búsqueda, APIs, bases de datos vectoriales) y valida de forma autónoma el resultado en un bucle de auto-corrección.
+* **Classic RAG (Búsqueda Secuencial):** Es el enfoque básico e inicial. La consulta del usuario se vectoriza, se realiza una búsqueda de similitud en la base de datos de vectores (**Mosaic AI Vector Search**) y se le entregan los fragmentos de texto al LLM en un único paso lineal.
+* **Graph RAG (Búsqueda en Grafos):** Sirve para conectar ideas sueltas en distintas fuentes. En lugar de buscar trozos de texto aislados, se extraen entidades y relaciones semánticas y se organizan en un Grafo de Conocimiento (Knowledge Graph) estructurado sobre tablas de Delta Lake.
+* **Agentic RAG (Agente Autónomo):** Es el nivel más avanzado y flexible. Le da el control a un agente de razonamiento diseñado con **Mosaic AI Agent Framework**. El agente evalúa la consulta, decide qué herramientas usar (Vector DB, APIs externas, búsquedas web) y valida las respuestas de forma autónoma en un ciclo de **Auto-Evaluación (Self-Correction Loop)** antes de entregarlas.
 
-Explora en este comparador interactivo cómo funciona cada esquema:
+Explora esta comparativa visual de los tres flujos de trabajo:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html" width="100%" height="520" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html" width="100%" height="580" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
 
 ---
 
