@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparativa RAG: Classic, Graph y Agentic</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    
+    :root {
+      /* Light mode defaults */
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-heading: #0F172A;
+      --text-body: #334155;
+      --border-color: #E2E8F0;
+      --border-radius: 12px;
+      --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      --classic-primary: #7C3AED;
+      --classic-bg: rgba(124, 58, 237, 0.05);
+      --classic-border: rgba(124, 58, 237, 0.15);
+      
+      --graph-primary: #10B981;
+      --graph-bg: rgba(16, 185, 129, 0.05);
+      --graph-border: rgba(16, 185, 129, 0.15);
+      
+      --agentic-primary: #06B6D4;
+      --agentic-bg: rgba(6, 182, 212, 0.05);
+      --agentic-border: rgba(6, 182, 212, 0.15);
+
+      --step-bg: #F1F5F9;
+      --details-bg: #F8FAFC;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-page: #0B0F19;
+        --bg-card: rgba(17, 24, 39, 0.7);
+        --text-heading: #F8FAFC;
+        --text-body: #94A3B8;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        
+        --classic-primary: #A855F7;
+        --classic-bg: rgba(168, 85, 247, 0.08);
+        --classic-border: rgba(168, 85, 247, 0.2);
+        
+        --graph-primary: #34D399;
+        --graph-bg: rgba(52, 211, 153, 0.08);
+        --graph-border: rgba(52, 211, 153, 0.2);
+        
+        --agentic-primary: #22D3EE;
+        --agentic-bg: rgba(34, 197, 94, 0.08); /* fallback but styled to cyan */
+        --agentic-bg: rgba(34, 211, 238, 0.08);
+        --agentic-border: rgba(34, 211, 238, 0.2);
+
+        --step-bg: rgba(15, 23, 42, 0.4);
+        --details-bg: rgba(15, 23, 42, 0.4);
+      }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background-color: var(--bg-page);
+      transition: var(--transition);
+    }
+
+    #figura-comparativa {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-body);
+      margin: 0;
+      padding: 0.75rem;
+      background-color: var(--bg-page);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: 100vh;
+    }
+
+    #figura-comparativa * {
+      box-sizing: border-box;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      width: 100%;
+      max-width: 850px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 1.5rem);
+      max-height: 520px;
+    }
+
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      color: var(--text-heading);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--text-body);
+      margin: 0;
+      opacity: 0.85;
+    }
+
+    /* Tabs (Mobile only) */
+    .comp-tabs {
+      display: none;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.4rem 0.5rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--step-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-body);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .tab-btn[data-target="classic"].active {
+      background: var(--classic-bg);
+      border-color: var(--classic-primary);
+      color: var(--classic-primary);
+    }
+
+    .tab-btn[data-target="graph"].active {
+      background: var(--graph-bg);
+      border-color: var(--graph-primary);
+      color: var(--graph-primary);
+    }
+
+    .tab-btn[data-target="agentic"].active {
+      background: var(--agentic-bg);
+      border-color: var(--agentic-primary);
+      color: var(--agentic-primary);
+    }
+
+    /* Grid Columns */
+    .columns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+      flex-grow: 1;
+      min-height: 0; /* allows children to overflow scroll if needed */
+    }
+
+    .comp-column {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(30, 41, 59, 0.01);
+      transition: var(--transition);
+      cursor: pointer;
+      min-height: 0;
+    }
+
+    .comp-column.active, .comp-column:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .comp-column[data-type="classic"].active, .comp-column[data-type="classic"]:hover {
+      border-color: var(--classic-primary);
+      background-color: var(--classic-bg);
+    }
+
+    .comp-column[data-type="graph"].active, .comp-column[data-type="graph"]:hover {
+      border-color: var(--graph-primary);
+      background-color: var(--graph-bg);
+    }
+
+    .comp-column[data-type="agentic"].active, .comp-column[data-type="agentic"]:hover {
+      border-color: var(--agentic-primary);
+      background-color: var(--agentic-bg);
+    }
+
+    .column-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .column-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .comp-column[data-type="classic"] .column-header h3 { color: var(--classic-primary); }
+    .comp-column[data-type="graph"] .column-header h3 { color: var(--graph-primary); }
+    .comp-column[data-type="agentic"] .column-header h3 { color: var(--agentic-primary); }
+
+    /* Flow diagram representation */
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      margin: auto 0;
+      padding: 0.25rem 0;
+    }
+
+    .flow-node {
+      width: 100%;
+      background: var(--step-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.35rem 0.25rem;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .flow-node svg {
+      flex-shrink: 0;
+      width: 12px;
+      height: 12px;
+    }
+
+    .flow-arrow {
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-body);
+      opacity: 0.5;
+    }
+    
+    .flow-arrow svg {
+      width: 10px;
+      height: 10px;
+      transform: rotate(90deg);
+    }
+
+    /* Highlighting node types based on columns */
+    .comp-column[data-type="classic"] .flow-node.highlighted {
+      background: var(--classic-primary);
+      color: #FFFFFF;
+      border-color: var(--classic-primary);
+    }
+    .comp-column[data-type="graph"] .flow-node.highlighted {
+      background: var(--graph-primary);
+      color: #FFFFFF;
+      border-color: var(--graph-primary);
+    }
+    .comp-column[data-type="agentic"] .flow-node.highlighted {
+      background: var(--agentic-primary);
+      color: #FFFFFF;
+      border-color: var(--agentic-primary);
+    }
+
+    /* Special knowledge graph container node */
+    .kg-sub-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.1rem;
+      border: 1px dashed var(--graph-primary);
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.05);
+      margin: 0.1rem 0;
+    }
+    .kg-sub-diagram svg {
+      width: 45px;
+      height: 35px;
+    }
+
+    /* Special agent stack container node */
+    .agent-stack-diagram {
+      border: 1px dashed var(--agentic-primary);
+      border-radius: 6px;
+      padding: 0.2rem;
+      width: 100%;
+      background: rgba(6, 182, 212, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .agent-stack-title {
+      font-size: 0.55rem;
+      text-align: center;
+      font-weight: 700;
+      color: var(--agentic-primary);
+      text-transform: uppercase;
+    }
+    .agent-stack-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.15rem;
+    }
+    .agent-sub-node {
+      font-size: 0.55rem;
+      padding: 0.15rem;
+      background: var(--step-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    /* Self evaluation loop styles */
+    .loop-node {
+      border-radius: 50%;
+      border: 1px dashed var(--agentic-primary);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: spin 8s linear infinite;
+    }
+    .loop-text {
+      position: absolute;
+      font-size: 0.5rem;
+      font-weight: bold;
+      color: var(--agentic-primary);
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Column Summary tags */
+    .summary-tags {
+      margin-top: 0.5rem;
+      padding-top: 0.35rem;
+      border-top: 1px dashed var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+      justify-content: center;
+    }
+
+    .tag {
+      font-size: 0.55rem;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-weight: 600;
+      background: var(--step-bg);
+      color: var(--text-body);
+    }
+
+    .comp-column[data-type="classic"] .tag.primary-tag { background: var(--classic-bg); color: var(--classic-primary); }
+    .comp-column[data-type="graph"] .tag.primary-tag { background: var(--graph-bg); color: var(--graph-primary); }
+    .comp-column[data-type="agentic"] .tag.primary-tag { background: var(--agentic-bg); color: var(--agentic-primary); }
+
+    /* Detail Box at the bottom */
+    .details-pane {
+      margin-top: 0.75rem;
+      border-left: 3px solid var(--classic-primary);
+      padding: 0.4rem 0.75rem;
+      background-color: var(--details-bg);
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.75rem;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .details-pane p {
+      margin: 0;
+      width: 100%;
+      line-height: 1.4;
+    }
+
+    .details-pane strong {
+      color: var(--text-heading);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 700px) {
+      .comp-tabs {
+        display: flex;
+      }
+      .columns-grid {
+        grid-template-columns: 1fr;
+      }
+      .comp-column {
+        display: none;
+      }
+      .comp-column.active-tab {
+        display: flex;
+      }
+      .card {
+        max-height: 520px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="figura-comparativa">
+  <div class="card glass-card">
+    <div class="card-header">
+      <h2>Evolución de Arquitecturas RAG</h2>
+      <p class="card-desc">Desde la recuperación secuencial simple hasta agentes autónomos capaces de auto-corregirse.</p>
+    </div>
+
+    <!-- Tab Selector (visible on mobile only) -->
+    <div class="comp-tabs">
+      <button class="tab-btn active" data-target="classic">Classic RAG</button>
+      <button class="tab-btn" data-target="graph">Graph RAG</button>
+      <button class="tab-btn" data-target="agentic">Agentic RAG</button>
+    </div>
+
+    <div class="columns-grid">
+      <!-- COLUMN 1: CLASSIC RAG -->
+      <div class="comp-column active" data-type="classic" id="col-classic">
+        <div class="column-header">
+          <h3>Classic RAG</h3>
+        </div>
+        
+        <div class="flow-diagram">
+          <!-- Node 1 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Query
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 2 -->
+          <div class="flow-node highlighted">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Embed (Vectorizar)
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 3 -->
+          <div class="flow-node highlighted">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+            Vector DB (Search)
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 4 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Top-K Chunks
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 5 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            LLM
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 6 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+            Respuesta (Answer)
+          </div>
+        </div>
+
+        <div class="summary-tags">
+          <span class="tag primary-tag">Búsqueda Rápida</span>
+          <span class="tag">Secuencial</span>
+          <span class="tag">Single-hop</span>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: GRAPH RAG -->
+      <div class="comp-column" data-type="graph" id="col-graph">
+        <div class="column-header">
+          <h3>Graph RAG</h3>
+        </div>
+        
+        <div class="flow-diagram">
+          <!-- Node 1 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Query
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 2 -->
+          <div class="flow-node highlighted">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            Extracción de Entidades
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          
+          <!-- Knowledge Graph Drawing -->
+          <div class="kg-sub-diagram">
+            <svg viewBox="0 0 60 40">
+              <!-- Edges -->
+              <line x1="10" y1="20" x2="30" y2="8" stroke="var(--graph-primary)" stroke-width="1.2" />
+              <line x1="30" y1="8" x2="50" y2="20" stroke="var(--graph-primary)" stroke-width="1.2" />
+              <line x1="10" y1="20" x2="20" y2="34" stroke="var(--graph-primary)" stroke-width="1.2" />
+              <line x1="50" y1="20" x2="40" y2="34" stroke="var(--graph-primary)" stroke-width="1.2" />
+              <line x1="20" y1="34" x2="40" y2="34" stroke="var(--graph-primary)" stroke-width="1.2" />
+              <line x1="10" y1="20" x2="40" y2="34" stroke="var(--graph-primary)" stroke-width="0.8" stroke-dasharray="2 1" />
+              <!-- Nodes -->
+              <circle cx="10" cy="20" r="3.5" fill="var(--bg-card)" stroke="var(--graph-primary)" stroke-width="1.5" />
+              <circle cx="30" cy="8" r="3.5" fill="var(--bg-card)" stroke="var(--graph-primary)" stroke-width="1.5" />
+              <circle cx="50" cy="20" r="3.5" fill="var(--bg-card)" stroke="var(--graph-primary)" stroke-width="1.5" />
+              <circle cx="20" cy="34" r="3.5" fill="var(--bg-card)" stroke="var(--graph-primary)" stroke-width="1.5" />
+              <circle cx="40" cy="34" r="3.5" fill="var(--bg-card)" stroke="var(--graph-primary)" stroke-width="1.5" />
+            </svg>
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+
+          <!-- Node 3 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Contexto Conectado
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 4 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            LLM
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 5 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+            Respuesta Relacional
+          </div>
+        </div>
+
+        <div class="summary-tags">
+          <span class="tag primary-tag">Relacional</span>
+          <span class="tag">Multi-fuente</span>
+          <span class="tag">Grafo Semántico</span>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: AGENTIC RAG -->
+      <div class="comp-column" data-type="agentic" id="col-agentic">
+        <div class="column-header">
+          <h3>Agentic RAG</h3>
+        </div>
+        
+        <div class="flow-diagram">
+          <!-- Node 1 -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Query
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Node 2: Reasoning Agent -->
+          <div class="flow-node highlighted">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M9.59 4.59A2 2 0 1 1 11 8H9m10.41 7.41A2 2 0 1 1 18 14h2M4.59 18.41A2 2 0 1 1 8 17v2m11.41-3.59A2 2 0 1 1 18 14v2m-6-10V4m0 16v-2m-8-8H4m16 0h-2m-3-3l-2.3 2.3M6.3 6.3l2.3 2.3m6.6 6.6l2.3 2.3M6.3 17.7l2.3-2.3"/></svg>
+            Agente de Razonamiento
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+
+          <!-- Tools Stack Grid -->
+          <div class="agent-stack-diagram">
+            <div class="agent-stack-title">Herramientas del Agente</div>
+            <div class="agent-stack-grid">
+              <div class="agent-sub-node" style="color: var(--classic-primary)">Vector DB</div>
+              <div class="agent-sub-node" style="color: var(--graph-primary)">KG Graph</div>
+              <div class="agent-sub-node" style="color: #F59E0B">Web Search</div>
+              <div class="agent-sub-node" style="color: #EF4444">Custom API</div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+
+          <!-- Circular Loop and evaluation -->
+          <div class="flow-node highlighted">
+            <div class="loop-node">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            </div>
+            <span class="loop-text">Loop</span>
+            Auto-Evaluación
+          </div>
+          <div class="flow-arrow">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <!-- Final Node -->
+          <div class="flow-node">
+            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Respuesta Final
+          </div>
+        </div>
+
+        <div class="summary-tags">
+          <span class="tag primary-tag">Adaptativo</span>
+          <span class="tag">Auto-corrección</span>
+          <span class="tag">Multi-herramienta</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Box at the bottom (linked to selection) -->
+    <div class="details-pane" id="comp-details-box">
+      <p id="comp-explanation">Selecciona o pasa el cursor por una arquitectura para ver la descripción y su relevancia en el ecosistema de Databricks.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const container = document.getElementById('figura-comparativa');
+  if (!container) return;
+
+  const columns = container.querySelectorAll('.comp-column');
+  const tabs = container.querySelectorAll('.tab-btn');
+  const detailsPane = container.querySelector('#comp-details-box');
+  const explanationText = container.querySelector('#comp-explanation');
+
+  const explanations = {
+    classic: '<strong>Classic RAG (Búsqueda de Vectores Secuencial)</strong><br>Busca los fragmentos (chunks) más relevantes en base al coseno de similitud semántica. Es extremadamente rápido y simple de implementar. Ideal para consultas directas sobre documentación técnica en <strong>Mosaic AI Vector Search</strong>.',
+    graph: '<strong>Graph RAG (Búsqueda Semántica en Grafos de Conocimiento)</strong><br>Extrae entidades y relaciones semánticas del texto. Conecta ideas lejanas que no comparten palabras clave comunes. En Databricks se integra combinando tablas Delta estructuradas y algoritmos relacionales.',
+    agentic: '<strong>Agentic RAG (Agente Autónomo de Razonamiento)</strong><br>El modelo evalúa la consulta y decide qué herramientas usar (Vector DB, Web, APIs). Incluye un bucle de auto-corrección (Self-Evaluation) que valida si la respuesta cumple el criterio antes de entregarla. Soportado nativamente por <strong>Mosaic AI Agent Framework</strong>.'
+  };
+
+  const colors = {
+    classic: 'var(--classic-primary)',
+    graph: 'var(--graph-primary)',
+    agentic: 'var(--agentic-primary)'
+  };
+
+  // Helper to switch active column details
+  function activateCategory(type) {
+    // Columns
+    columns.forEach(col => {
+      col.classList.remove('active');
+      if (col.getAttribute('data-type') === type) {
+        col.classList.add('active');
+      }
+    });
+
+    // Mobile tabs
+    tabs.forEach(tab => {
+      tab.classList.remove('active');
+      if (tab.getAttribute('data-target') === type) {
+        tab.classList.add('active');
+      }
+    });
+
+    // Mobile columns visibility
+    columns.forEach(col => {
+      col.classList.remove('active-tab');
+      if (col.getAttribute('data-type') === type) {
+        col.classList.add('active-tab');
+      }
+    });
+
+    // Details box
+    explanationText.innerHTML = explanations[type];
+    detailsPane.style.borderLeftColor = colors[type];
+  }
+
+  // Set default
+  activateCategory('classic');
+
+  // Event Listeners
+  columns.forEach(col => {
+    const type = col.getAttribute('data-type');
+    
+    col.addEventListener('mouseenter', () => {
+      activateCategory(type);
+    });
+
+    col.addEventListener('click', () => {
+      activateCategory(type);
+    });
+  });
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-target');
+      activateCategory(target);
+    });
+  });
+})();
+</script>
+</body>
+</html>
