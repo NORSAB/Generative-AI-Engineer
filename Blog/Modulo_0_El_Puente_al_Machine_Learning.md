@@ -37,7 +37,7 @@ Tres conceptos indispensables para entender el flujo técnico del examen.
 * **Ventana de Contexto (Context Window)**: Es el límite de memoria del modelo en una sola llamada de entrada y salida. DBRX tiene una ventana de 32K tokens, mientras que otros modelos alcanzan 128K o más. Superar este límite significa que el modelo olvidará la información más vieja.
 * **Embeddings**: Son representaciones matemáticas del significado de las palabras. Cada palabra o frase se convierte en una lista de números (un vector) en un espacio de muchas dimensiones. Lo valioso de esto es que palabras con significados similares (ejemplo: "médico" y "doctor") quedan ubicadas muy cerca unas de otras en este mapa matemático, facilitando las búsquedas semánticas.
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura1.html?v=9" width="100%" height="860" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="De Texto a Vectores: Tokenización y Embeddings"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura1.html?v=10" width="100%" height="860" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="De Texto a Vectores: Tokenización y Embeddings"></iframe>
 
 ---
 
