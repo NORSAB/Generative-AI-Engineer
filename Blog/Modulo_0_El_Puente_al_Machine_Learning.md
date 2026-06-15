@@ -97,7 +97,7 @@ No todos los flujos RAG se diseñan igual. A medida que las aplicaciones empresa
 
 Explora esta comparativa visual de los tres flujos de trabajo:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html?v=12" width="100%" height="820" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html?v=13" width="100%" height="870" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
 
 ---
 
