@@ -139,9 +139,9 @@ body {
 
 /* FLEX / GRID */
 .grid-two-cols {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2rem !important;
 }
 
 .visual-pane {
@@ -242,16 +242,18 @@ body {
 
 .vector-space {
   width: 100%;
+  max-width: 450px;
   height: auto;
   display: block;
   overflow: visible;
+  margin: 0 auto;
 }
 
 .vector-space text {
   fill: #FFFFFF !important;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 14px !important;
+  font-size: 15px !important;
   stroke: none !important;
   text-shadow: none !important;
   paint-order: fill !important;
