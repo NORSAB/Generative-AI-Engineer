@@ -108,9 +108,9 @@
       opacity: 0.85;
     }
     #figura-tokenizacion .grid-two-cols {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
     #figura-tokenizacion .visual-pane {
       background-color: var(--pane-bg);
@@ -208,7 +208,7 @@
     #figura-tokenizacion .vector-space text {
       fill: #FFFFFF !important;
       font-weight: 700;
-      font-size: 12px !important;
+      font-size: 14px !important;
       stroke: none !important;
       text-shadow: none !important;
       paint-order: fill !important;
@@ -294,8 +294,8 @@
               <circle cx="240" cy="80" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="machine" />
               <circle cx="270" cy="50" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
               <circle cx="310" cy="90" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
-              <text x="310" y="64" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">learning</text>
-              <text x="170" y="84" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">machine</text>
+              <text x="312" y="64" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">learning</text>
+              <text x="165" y="84" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">machine</text>
               <text x="270" y="38" font-size="8" fill="var(--accent-primary)" stroke="none">AI / Modelos</text>
             </g>
 
@@ -303,15 +303,15 @@
               <circle cx="120" cy="130" r="5" fill="var(--accent-secondary)" stroke="var(--accent-secondary)" stroke-width="1" class="node" data-word="puente" />
               <circle cx="90" cy="155" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
               <circle cx="150" cy="115" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
-              <text x="130" y="134" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">puente</text>
+              <text x="132" y="134" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">puente</text>
               <text x="80" y="105" font-size="8" fill="var(--accent-secondary)" stroke="none">Estructura</text>
             </g>
 
             <!-- Neutrals -->
             <circle cx="80" cy="70" r="4" fill="var(--axis-stroke)" />
-            <text x="90" y="74" font-size="8" fill="var(--text-body)" stroke="none">El</text>
+            <text x="92" y="74" font-size="8" fill="var(--text-body)" stroke="none">El</text>
             <circle cx="190" cy="140" r="4" fill="var(--axis-stroke)" />
-            <text x="200" y="144" font-size="8" fill="var(--text-body)" stroke="none">al</text>
+            <text x="202" y="144" font-size="8" fill="var(--text-body)" stroke="none">al</text>
           </svg>
         </div>
         <div class="vector-coords">
