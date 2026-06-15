@@ -6,8 +6,7 @@
   <title>Arquitectura RAG (Retrieval-Augmented Generation)</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-    html, body { margin: 0; padding: 0; overflow: hidden; }
-    #figura-rag {
+    :root {
       /* Light mode defaults */
       --bg-page: #F8FAFC;
       --bg-card: #FFFFFF;
@@ -30,20 +29,10 @@
       --step-icon-color: #7C3AED;
       --arrow-color: #94A3B8;
       --details-bg: #F1F5F9;
-
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: var(--text-body);
-      margin: 0;
-      padding: 0.75rem;
-      background-color: var(--bg-page);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
     }
 
     @media (prefers-color-scheme: dark) {
-      #figura-rag {
+      :root {
         --bg-page: #0B0F19;
         --bg-card: rgba(17, 24, 39, 0.7);
         --text-heading: #F8FAFC;
@@ -64,6 +53,28 @@
         --arrow-color: #475569;
         --details-bg: rgba(15, 23, 42, 0.4);
       }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background-color: var(--bg-page);
+      transition: var(--transition);
+    }
+
+    #figura-rag {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-body);
+      margin: 0;
+      padding: 0.75rem;
+      background-color: var(--bg-page);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: 100vh;
     }
 
     #figura-rag * {
@@ -127,6 +138,9 @@
       }
       #figura-rag .rag-arrow {
         transform: rotate(90deg);
+      }
+      #figura-rag .rag-details-box {
+        height: 120px;
       }
     }
     #figura-rag .rag-step {
@@ -208,6 +222,13 @@
       border-top: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
       border-bottom: 1px solid var(--border-color);
+      height: 90px;
+      display: flex;
+      align-items: center;
+    }
+    #figura-rag .rag-details-box p {
+      margin: 0;
+      width: 100%;
     }
   </style>
 </head>
