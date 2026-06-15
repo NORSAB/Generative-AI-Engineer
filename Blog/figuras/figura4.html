@@ -127,46 +127,7 @@
       opacity: 0.85;
     }
 
-    /* Tabs (Mobile only) */
-    .comp-tabs {
-      display: none;
-      gap: 0.35rem;
-      margin-bottom: 0.75rem;
-      justify-content: center;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 0.4rem 0.5rem;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--step-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-body);
-      cursor: pointer;
-      transition: var(--transition);
-      text-align: center;
-    }
-
-    .tab-btn[data-target="classic"].active {
-      background: var(--classic-bg);
-      border-color: var(--classic-primary);
-      color: var(--classic-primary);
-    }
-
-    .tab-btn[data-target="graph"].active {
-      background: var(--graph-bg);
-      border-color: var(--graph-primary);
-      color: var(--graph-primary);
-    }
-
-    .tab-btn[data-target="agentic"].active {
-      background: var(--agentic-bg);
-      border-color: var(--agentic-primary);
-      color: var(--agentic-primary);
-    }
+    /* No tabs style needed */
 
     /* Grid Columns */
     .columns-grid {
@@ -387,55 +348,7 @@
     .comp-column[data-type="agentic"] .tag.primary-tag { background: var(--agentic-bg); color: var(--agentic-primary); }
 
     /* Responsive adjustments */
-    @media (max-width: 700px) {
-      .comp-tabs {
-        display: flex;
-      }
-      .columns-grid {
-        grid-template-columns: 1fr;
-        overflow-y: auto;
-      }
-      /* Custom thin scrollbar */
-      .columns-grid::-webkit-scrollbar {
-        width: 4px;
-      }
-      .columns-grid::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .columns-grid::-webkit-scrollbar-thumb {
-        background: var(--border-color);
-        border-radius: 2px;
-      }
-      .comp-column {
-        display: none;
-        min-height: auto;
-        padding: 0.4rem;
-      }
-      .comp-column.active-tab {
-        display: flex;
-      }
-      .card {
-        max-height: 580px;
-      }
-      .flow-diagram {
-        gap: 0.25rem;
-      }
-      .flow-node {
-        padding: 0.35rem 0.25rem;
-        font-size: 0.68rem;
-      }
-      .flow-arrow {
-        height: 10px;
-      }
-      .flow-arrow svg {
-        width: 8px;
-        height: 8px;
-      }
-      .summary-tags {
-        margin-top: 0.4rem;
-        padding-top: 0.3rem;
-      }
-    }
+    /* No mobile collapse */
   </style>
 </head>
 <body>
@@ -446,12 +359,7 @@
       <p class="card-desc">Desde la recuperación secuencial simple hasta agentes autónomos capaces de auto-corregirse.</p>
     </div>
 
-    <!-- Tab Selector (visible on mobile only) -->
-    <div class="comp-tabs">
-      <button class="tab-btn active" data-target="classic">Classic RAG</button>
-      <button class="tab-btn" data-target="graph">Graph RAG</button>
-      <button class="tab-btn" data-target="agentic">Agentic RAG</button>
-    </div>
+    <!-- No Mobile Tab Selector -->
 
     <div class="columns-grid">
       <!-- COLUMN 1: CLASSIC RAG -->
@@ -664,39 +572,18 @@
   if (!container) return;
 
   const columns = container.querySelectorAll('.comp-column');
-  const tabs = container.querySelectorAll('.tab-btn');
 
-  // Helper to switch active column details
   function activateCategory(type) {
-    // Columns
     columns.forEach(col => {
       col.classList.remove('active');
       if (col.getAttribute('data-type') === type) {
         col.classList.add('active');
       }
     });
-
-    // Mobile tabs
-    tabs.forEach(tab => {
-      tab.classList.remove('active');
-      if (tab.getAttribute('data-target') === type) {
-        tab.classList.add('active');
-      }
-    });
-
-    // Mobile columns visibility
-    columns.forEach(col => {
-      col.classList.remove('active-tab');
-      if (col.getAttribute('data-type') === type) {
-        col.classList.add('active-tab');
-      }
-    });
   }
 
-  // Set default
   activateCategory('classic');
 
-  // Event Listeners
   columns.forEach(col => {
     const type = col.getAttribute('data-type');
     
@@ -706,13 +593,6 @@
 
     col.addEventListener('click', () => {
       activateCategory(type);
-    });
-  });
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.getAttribute('data-target');
-      activateCategory(target);
     });
   });
 })();
