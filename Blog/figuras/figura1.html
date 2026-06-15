@@ -8,80 +8,57 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
     html, body { margin: 0; padding: 0; overflow: hidden; }
         #figura-tokenizacion {
-      /* Light mode defaults */
-      --bg-page: #F8FAFC;
-      --bg-card: #FFFFFF;
-      --text-heading: #0F172A;
-      --text-body: #334155;
-      --accent-primary: #7C3AED;
-      --accent-secondary: #0891B2;
-      --border-color: #E2E8F0;
+      /* Dark mode forced by default for blog embedding */
+      --bg-page: #0B0F19;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --text-heading: #F8FAFC;
+      --text-body: #94A3B8;
+      --accent-primary: #A855F7;
+      --accent-secondary: #06B6D4;
+      --border-color: rgba(255, 255, 255, 0.08);
       --border-radius: 12px;
-      --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       
       --badge-bg: var(--accent-secondary);
-      --badge-color: #FFFFFF;
-      --pane-bg: #F1F5F9;
-      --input-bg: #FFFFFF;
+      --badge-color: #0B0F19;
+      --pane-bg: rgba(15, 23, 42, 0.4);
+      --input-bg: rgba(30, 41, 59, 0.5);
       --label-color: #64748B;
-      --coords-bg: #FFFFFF;
-      --coords-text: var(--accent-primary);
+      --coords-bg: rgba(30, 41, 59, 0.5);
+      --coords-text: #C084FC;
       --text-explain: #64748B;
       --node-stroke: #FFFFFF;
-      --text-word: #334155;
-      --grid-stroke: #E2E8F0;
-      --axis-stroke: #94A3B8;
+      --text-word: #F8FAFC;
+      --grid-stroke: rgba(255, 255, 255, 0.08);
+      --axis-stroke: rgba(255, 255, 255, 0.2);
 
-      --token-1-bg: rgba(124, 58, 237, 0.1); --token-1-text: #7C3AED; --token-1-border: rgba(124, 58, 237, 0.2);
-      --token-2-bg: rgba(8, 145, 178, 0.1);  --token-2-text: #0891B2; --token-2-border: rgba(8, 145, 178, 0.2);
-      --token-3-bg: rgba(225, 29, 72, 0.1);  --token-3-text: #E11D48; --token-3-border: rgba(225, 29, 72, 0.2);
-      --token-4-bg: rgba(217, 119, 6, 0.1);  --token-4-text: #D97706; --token-4-border: rgba(217, 119, 6, 0.2);
-      --token-5-bg: rgba(22, 163, 74, 0.1);  --token-5-text: #16A34A; --token-5-border: rgba(22, 163, 74, 0.2);
+      --token-1-bg: rgba(168, 85, 247, 0.15); --token-1-text: #C084FC; --token-1-border: rgba(168, 85, 247, 0.3);
+      --token-2-bg: rgba(6, 182, 212, 0.15);  --token-2-text: #22D3EE; --token-2-border: rgba(6, 182, 212, 0.3);
+      --token-3-bg: rgba(244, 63, 94, 0.15);  --token-3-text: #FB7185; --token-3-border: rgba(244, 63, 94, 0.3);
+      --token-4-bg: rgba(245, 158, 11, 0.15);  --token-4-text: #FBBF24; --token-4-border: rgba(245, 158, 11, 0.3);
+      --token-5-bg: rgba(34, 197, 94, 0.15);  --token-5-text: #4ADE80; --token-5-border: rgba(34, 197, 94, 0.3);
 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-body);
       margin: 0;
-      padding: 0.5rem;
-      background-color: var(--bg-page);
+      padding: 0;
+      background-color: #0B0F19 !important;
       display: flex;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
+      min-height: 100vh;
     }
 
-    @media (prefers-color-scheme: dark) {
-      #figura-tokenizacion {
-        --bg-page: #0B0F19;
-        --bg-card: rgba(17, 24, 39, 0.7);
-        --text-heading: #F8FAFC;
-        --text-body: #94A3B8;
-        --accent-primary: #A855F7;
-        --accent-secondary: #06B6D4;
-        --border-color: rgba(255, 255, 255, 0.08);
-        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-        
-        --badge-bg: var(--accent-secondary);
-        --badge-color: #0B0F19;
-        --pane-bg: rgba(15, 23, 42, 0.4);
-        --input-bg: rgba(30, 41, 59, 0.5);
-        --label-color: #64748B;
-        --coords-bg: rgba(30, 41, 59, 0.5);
-        --coords-text: #C084FC;
-        --text-explain: #64748B;
-        --node-stroke: #FFFFFF;
-        --text-word: #F8FAFC;
-        --grid-stroke: rgba(255, 255, 255, 0.08);
-        --axis-stroke: rgba(255, 255, 255, 0.2);
-
-        --token-1-bg: rgba(168, 85, 247, 0.15); --token-1-text: #C084FC; --token-1-border: rgba(168, 85, 247, 0.3);
-        --token-2-bg: rgba(6, 182, 212, 0.15);  --token-2-text: #22D3EE; --token-2-border: rgba(6, 182, 212, 0.3);
-        --token-3-bg: rgba(244, 63, 94, 0.15);  --token-3-text: #FB7185; --token-3-border: rgba(244, 63, 94, 0.3);
-        --token-4-bg: rgba(245, 158, 11, 0.15);  --token-4-text: #FBBF24; --token-4-border: rgba(245, 158, 11, 0.3);
-        --token-5-bg: rgba(34, 197, 94, 0.15);  --token-5-text: #4ADE80; --token-5-border: rgba(34, 197, 94, 0.3);
-      }
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background-color: #0B0F19 !important;
+      transition: var(--transition);
     }
 
     #figura-tokenizacion * {
@@ -222,15 +199,31 @@
       background-color: var(--pane-bg);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 0.25rem;
+      padding: 0.2rem;
       display: flex;
       justify-content: center;
+      width: 100%;
     }
     #figura-tokenizacion .vector-space {
       width: 100%;
-      max-width: 280px;
-      height: auto;
+      height: 250px;
+      display: block;
       overflow: visible;
+    }
+    #figura-tokenizacion .vector-space text {
+      fill: #FFFFFF !important;
+      font-weight: 700;
+      font-size: 12px !important;
+      stroke: none !important;
+      text-shadow: none !important;
+      paint-order: fill !important;
+    }
+    #figura-tokenizacion .vector-space text.axis-label {
+      stroke: none !important;
+      fill: var(--text-body) !important;
+      font-weight: 500;
+      font-size: 10px !important;
+      text-shadow: none !important;
     }
     #figura-tokenizacion .node {
       cursor: pointer;
@@ -289,41 +282,41 @@
       <div class="visual-pane">
         <h3>2. Embeddings (Espacio Semántico)</h3>
         <div class="vector-space-wrapper">
-          <svg class="vector-space" viewBox="0 0 300 200">
+          <svg class="vector-space" viewBox="0 0 380 220">
             <!-- Grid Lines -->
-            <line x1="35" y1="180" x2="280" y2="180" stroke="var(--grid-stroke)" stroke-dasharray="4" />
-            <line x1="35" y1="20" x2="35" y2="180" stroke="var(--grid-stroke)" stroke-dasharray="4" />
+            <line x1="35" y1="190" x2="360" y2="190" stroke="var(--grid-stroke)" stroke-dasharray="4" />
+            <line x1="35" y1="15" x2="35" y2="190" stroke="var(--grid-stroke)" stroke-dasharray="4" />
             
             <!-- Axis -->
-            <line x1="35" y1="180" x2="290" y2="180" stroke="var(--axis-stroke)" stroke-width="1.5" />
-            <line x1="35" y1="10" x2="35" y2="180" stroke="var(--axis-stroke)" stroke-width="1.5" />
-            <text x="280" y="195" font-size="9" fill="var(--text-body)" text-anchor="end">Dimensión X</text>
-            <text x="15" y="95" font-size="9" fill="var(--text-body)" transform="rotate(-90 15 95)" text-anchor="middle">Dimensión Y</text>
+            <line x1="35" y1="190" x2="370" y2="190" stroke="var(--axis-stroke)" stroke-width="1.5" />
+            <line x1="35" y1="10" x2="35" y2="190" stroke="var(--axis-stroke)" stroke-width="1.5" />
+            <text x="360" y="205" font-size="9" fill="var(--text-body)" class="axis-label" text-anchor="end">Dimensión X</text>
+            <text x="15" y="100" font-size="9" fill="var(--text-body)" class="axis-label" transform="rotate(-90 15 100)" text-anchor="middle">Dimensión Y</text>
 
             <!-- Clusters / Words -->
             <g class="cluster-tech">
-              <circle cx="220" cy="50" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="learning" />
-              <circle cx="190" cy="65" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="machine" />
-              <circle cx="205" cy="40" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
-              <circle cx="230" cy="70" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
-              <text x="228" y="53" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">learning</text>
-              <text x="148" y="68" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">machine</text>
-              <text x="190" y="32" font-size="8" fill="var(--accent-primary)" stroke="none">AI / Modelos</text>
+              <circle cx="300" cy="60" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="learning" />
+              <circle cx="240" cy="80" r="5" fill="var(--accent-primary)" stroke="var(--accent-primary)" stroke-width="1" class="node" data-word="machine" />
+              <circle cx="270" cy="50" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
+              <circle cx="310" cy="90" r="4" fill="var(--token-1-bg)" stroke="var(--accent-primary)" stroke-width="1" />
+              <text x="310" y="64" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">learning</text>
+              <text x="170" y="84" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">machine</text>
+              <text x="270" y="38" font-size="8" fill="var(--accent-primary)" stroke="none">AI / Modelos</text>
             </g>
 
             <g class="cluster-infra">
-              <circle cx="95" cy="120" r="5" fill="var(--accent-secondary)" stroke="var(--accent-secondary)" stroke-width="1" class="node" data-word="puente" />
-              <circle cx="75" cy="140" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
-              <circle cx="115" cy="110" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
-              <text x="103" y="123" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">puente</text>
-              <text x="65" y="100" font-size="8" fill="var(--accent-secondary)" stroke="none">Estructura</text>
+              <circle cx="120" cy="130" r="5" fill="var(--accent-secondary)" stroke="var(--accent-secondary)" stroke-width="1" class="node" data-word="puente" />
+              <circle cx="90" cy="155" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
+              <circle cx="150" cy="115" r="4" fill="var(--token-2-bg)" stroke="var(--accent-secondary)" stroke-width="1" />
+              <text x="130" y="134" font-size="9" fill="var(--text-heading)" font-weight="600" stroke="none">puente</text>
+              <text x="80" y="105" font-size="8" fill="var(--accent-secondary)" stroke="none">Estructura</text>
             </g>
 
             <!-- Neutrals -->
-            <circle cx="65" cy="60" r="4" fill="var(--axis-stroke)" />
-            <text x="73" y="63" font-size="8" fill="var(--text-body)" stroke="none">El</text>
-            <circle cx="145" cy="130" r="4" fill="var(--axis-stroke)" />
-            <text x="153" y="133" font-size="8" fill="var(--text-body)" stroke="none">al</text>
+            <circle cx="80" cy="70" r="4" fill="var(--axis-stroke)" />
+            <text x="90" y="74" font-size="8" fill="var(--text-body)" stroke="none">El</text>
+            <circle cx="190" cy="140" r="4" fill="var(--axis-stroke)" />
+            <text x="200" y="144" font-size="8" fill="var(--text-body)" stroke="none">al</text>
           </svg>
         </div>
         <div class="vector-coords">
