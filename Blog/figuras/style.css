@@ -139,8 +139,8 @@ body {
 
 /* FLEX / GRID */
 .grid-two-cols {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
@@ -251,7 +251,7 @@ body {
   fill: #FFFFFF !important;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 12px !important;
+  font-size: 14px !important;
   stroke: none !important;
   text-shadow: none !important;
   paint-order: fill !important;
