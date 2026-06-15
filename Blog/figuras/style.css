@@ -144,12 +144,6 @@ body {
   gap: 2rem;
 }
 
-@media (max-width: 768px) {
-  .grid-two-cols {
-    grid-template-columns: 1fr;
-  }
-}
-
 .visual-pane {
   background-color: var(--bg-page);
   border: 1px solid var(--border-color);
@@ -248,7 +242,7 @@ body {
 
 .vector-space {
   width: 100%;
-  height: 250px;
+  height: auto;
   display: block;
   overflow: visible;
 }
