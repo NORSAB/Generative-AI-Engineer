@@ -100,4 +100,67 @@ document.addEventListener('DOMContentLoaded', () => {
     step.addEventListener('click', handleStepEvent);
   });
 
+  // ==========================================
+  // FIGURA 4: EVOLUCIÓN DE ARQUITECTURAS RAG
+  // ==========================================
+  const compColumns = document.querySelectorAll('.comp-column');
+  const compTabs = document.querySelectorAll('.tab-btn');
+  const compDetailsPane = document.getElementById('comp-details-box');
+  const compExplanationText = document.getElementById('comp-explanation');
+
+  if (compColumns.length > 0) {
+    const explanations = {
+      classic: '<strong>Classic RAG (Búsqueda de Vectores Secuencial)</strong><br>Busca los fragmentos (chunks) más relevantes en base al coseno de similitud semántica. Es extremadamente rápido y simple de implementar. Ideal para consultas directas sobre documentación técnica en <strong>Mosaic AI Vector Search</strong>.',
+      graph: '<strong>Graph RAG (Búsqueda Semántica en Grafos de Conocimiento)</strong><br>Extrae entidades y relaciones semánticas del texto. Conecta ideas lejanas que no comparten palabras clave comunes. En Databricks se integra combinando tablas Delta estructuradas y algoritmos relacionales.',
+      agentic: '<strong>Agentic RAG (Agente Autónomo de Razonamiento)</strong><br>El modelo evalúa la consulta y decide qué herramientas usar (Vector DB, Web, APIs). Incluye un bucle de auto-corrección (Self-Evaluation) que valida si la respuesta cumple el criterio antes de entregarla. Soportado nativamente por <strong>Mosaic AI Agent Framework</strong>.'
+    };
+
+    const colors = {
+      classic: 'var(--classic-primary)',
+      graph: 'var(--graph-primary)',
+      agentic: 'var(--agentic-primary)'
+    };
+
+    function activateCategory(type) {
+      compColumns.forEach(col => {
+        col.classList.remove('active');
+        if (col.getAttribute('data-type') === type) {
+          col.classList.add('active');
+        }
+      });
+
+      compTabs.forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.getAttribute('data-target') === type) {
+          tab.classList.add('active');
+        }
+      });
+
+      compColumns.forEach(col => {
+        col.classList.remove('active-tab');
+        if (col.getAttribute('data-type') === type) {
+          col.classList.add('active-tab');
+        }
+      });
+
+      if (compExplanationText) compExplanationText.innerHTML = explanations[type];
+      if (compDetailsPane) compDetailsPane.style.borderLeftColor = colors[type];
+    }
+
+    activateCategory('classic');
+
+    compColumns.forEach(col => {
+      const type = col.getAttribute('data-type');
+      col.addEventListener('mouseenter', () => activateCategory(type));
+      col.addEventListener('click', () => activateCategory(type));
+    });
+
+    compTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-target');
+        activateCategory(target);
+      });
+    });
+  }
+
 });
