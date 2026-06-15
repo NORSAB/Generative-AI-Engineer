@@ -6,40 +6,46 @@
   <title>Mecanismo de Auto-Atención (Self-Attention)</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-    html, body { margin: 0; padding: 0; overflow: hidden; }
-     #figura-atencion {
-      /* Light mode defaults */
-      --bg-page: #F8FAFC;
-      --bg-card: #FFFFFF;
-      --text-heading: #0F172A;
-      --text-body: #334155;
-      --accent-primary: #7C3AED;
-      --accent-secondary: #0891B2;
-      --border-color: #E2E8F0;
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background-color: #0B0F19 !important;
+    }
+    #figura-atencion {
+      /* Dark mode forced by default for blog embedding */
+      --bg-page: #0B0F19;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --text-heading: #F8FAFC;
+      --text-body: #94A3B8;
+      --accent-primary: #A855F7;
+      --accent-secondary: #06B6D4;
+      --border-color: rgba(255, 255, 255, 0.08);
       --border-radius: 12px;
-      --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       
       --badge-bg: var(--accent-secondary);
-      --badge-color: #FFFFFF;
-      --btn-bg: rgba(30, 41, 59, 0.05);
-      --btn-border: #E2E8F0;
+      --badge-color: #0B0F19;
+      --btn-bg: rgba(30, 41, 59, 0.4);
+      --btn-border: var(--border-color);
       --btn-active-bg: var(--accent-primary);
       --btn-active-text: #FFFFFF;
-      --box-bg: #F1F5F9;
+      --box-bg: rgba(15, 23, 42, 0.4);
       
-      --word-focus-bg: rgba(124, 58, 237, 0.15);
-      --word-focus-text: #7C3AED;
+      --word-focus-bg: rgba(168, 85, 247, 0.2);
+      --word-focus-text: #D8B4FE;
       --word-focus-outline: var(--accent-primary);
-      --word-focus-bg-cyan: rgba(8, 145, 178, 0.15);
-      --word-focus-text-cyan: #0891B2;
+      --word-focus-bg-cyan: rgba(6, 182, 212, 0.2);
+      --word-focus-text-cyan: #67E8F9;
       --word-focus-outline-cyan: var(--accent-secondary);
-      --word-target-bg: rgba(124, 58, 237, 0.08);
+      --word-target-bg: rgba(168, 85, 247, 0.1);
       --word-target-border: var(--accent-primary);
-      --word-target-bg-cyan: rgba(8, 145, 178, 0.08);
+      --word-target-bg-cyan: rgba(6, 182, 212, 0.1);
       --word-target-border-cyan: var(--accent-secondary);
-      --caption-bg: #FFFFFF;
+      --caption-bg: rgba(30, 41, 59, 0.3);
 
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-body);
@@ -50,40 +56,7 @@
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      #figura-atencion {
-        --bg-page: #0B0F19;
-        --bg-card: rgba(17, 24, 39, 0.7);
-        --text-heading: #F8FAFC;
-        --text-body: #94A3B8;
-        --accent-primary: #A855F7;
-        --accent-secondary: #06B6D4;
-        --border-color: rgba(255, 255, 255, 0.08);
-        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-        
-        --badge-bg: var(--accent-secondary);
-        --badge-color: #0B0F19;
-        --btn-bg: rgba(30, 41, 59, 0.4);
-        --btn-border: var(--border-color);
-        --btn-active-bg: var(--accent-primary);
-        --btn-active-text: #FFFFFF;
-        --box-bg: rgba(15, 23, 42, 0.4);
-        
-        --word-focus-bg: rgba(168, 85, 247, 0.2);
-        --word-focus-text: #D8B4FE;
-        --word-focus-outline: var(--accent-primary);
-        --word-focus-bg-cyan: rgba(6, 182, 212, 0.2);
-        --word-focus-text-cyan: #67E8F9;
-        --word-focus-outline-cyan: var(--accent-secondary);
-        --word-target-bg: rgba(168, 85, 247, 0.1);
-        --word-target-border: var(--accent-primary);
-        --word-target-bg-cyan: rgba(6, 182, 212, 0.1);
-        --word-target-border-cyan: var(--accent-secondary);
-        --caption-bg: rgba(30, 41, 59, 0.3);
-      }
+      min-height: 100vh;
     }
 
     #figura-atencion * {
