@@ -12,7 +12,7 @@ Un **Large Language Model (LLM)** es una red neuronal gigante entrenada con enor
 
 El motor de todo esto es la arquitectura **Transformer**, descrita en el histórico paper *"Attention Is All You Need"* (2017). A diferencia de las antiguas redes recurrentes (RNN) que leían las oraciones palabra por palabra (lo que causaba que olvidaran el inicio del párrafo al llegar al final), el Transformer procesa toda la frase a la vez. Lo logra con el mecanismo de **Auto-Atención (Self-Attention)**, que calcula qué palabras de una oración se relacionan más con otras para definir el contexto.
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura2.html?v=8" width="100%" height="400" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Mecanismo de Auto-Atención (Self-Attention)"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura2.html?v=9" width="100%" height="400" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Mecanismo de Auto-Atención (Self-Attention)"></iframe>
 
 ---
 
@@ -37,7 +37,7 @@ Tres conceptos indispensables para entender el flujo técnico del examen.
 * **Ventana de Contexto (Context Window)**: Es el límite de memoria del modelo en una sola llamada de entrada y salida. DBRX tiene una ventana de 32K tokens, mientras que otros modelos alcanzan 128K o más. Superar este límite significa que el modelo olvidará la información más vieja.
 * **Embeddings**: Son representaciones matemáticas del significado de las palabras. Cada palabra o frase se convierte en una lista de números (un vector) en un espacio de muchas dimensiones. Lo valioso de esto es que palabras con significados similares (ejemplo: "médico" y "doctor") quedan ubicadas muy cerca unas de otras en este mapa matemático, facilitando las búsquedas semánticas.
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura1.html?v=8" width="100%" height="720" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="De Texto a Vectores: Tokenización y Embeddings"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura1.html?v=9" width="100%" height="720" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="De Texto a Vectores: Tokenización y Embeddings"></iframe>
 
 ---
 
@@ -79,7 +79,7 @@ Databricks engloba todo su desarrollo de IA generativa bajo la marca **Mosaic AI
 
 Para estructurar una aplicación que no alucine y que conozca los datos internos de tu empresa, usamos la arquitectura **RAG (Retrieval-Augmented Generation)**. A continuación, puedes ver cómo se orquesta este flujo paso a paso:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html?v=8" width="100%" height="240" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html?v=9" width="100%" height="240" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
 
 ### El Flujo de Datos en RAG Paso a Paso:
 1. **Pregunta del Usuario (Query):** Escribes tu duda en lenguaje natural (ej. *"¿Cuál es la política de viáticos?"*). Esta pregunta se vectoriza al vuelo usando un modelo de embeddings.
@@ -97,7 +97,7 @@ No todos los flujos RAG se diseñan igual. A medida que las aplicaciones empresa
 
 Explora esta comparativa visual de los tres flujos de trabajo:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html?v=8" width="100%" height="820" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html?v=9" width="100%" height="820" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
 
 ---
 
