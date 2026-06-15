@@ -81,7 +81,7 @@ Databricks engloba todo su desarrollo de IA generativa bajo la marca **Mosaic AI
 
 Para estructurar una aplicación que no alucine y que conozca los datos internos de tu empresa, usamos la arquitectura **RAG (Retrieval-Augmented Generation)**. A continuación, puedes ver cómo se orquesta este flujo paso a paso:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html" width="100%" height="320" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html?v=2" width="100%" height="350" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
 
 ### El Flujo de Datos en RAG Paso a Paso:
 1. **Pregunta del Usuario (Query):** Escribes tu duda en lenguaje natural (ej. *"¿Cuál es la política de viáticos?"*). Esta pregunta se vectoriza al vuelo usando un modelo de embeddings.
@@ -99,7 +99,7 @@ No todos los flujos RAG se diseñan igual. A medida que las aplicaciones empresa
 
 Explora esta comparativa visual de los tres flujos de trabajo:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html" width="100%" height="580" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura4.html?v=2" width="100%" height="900" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Evolución de Arquitecturas RAG"></iframe>
 
 ---
 
@@ -113,20 +113,17 @@ Explora esta comparativa visual de los tres flujos de trabajo:
 
 ---
 
-## Estructura del Examen y Ruta de Estudio
+## Tips de Examen: Conceptos Clave del Módulo 0
 
-El examen **Databricks Certified Generative AI Engineer Associate** evalúa tu criterio técnico para implementar estas soluciones de forma profesional:
+Para asegurar el éxito en la certificación, ten claros estos puntos de diseño y arquitectura en el examen:
 
-* **Duración**: 90 minutos para responder **45 preguntas** de opción múltiple.
-* **Aprobación**: Se requiere un mínimo del **70%** (aproximadamente 32 aciertos).
-* **Distribución de pesos de los dominios**:
-  1. **Application Development (30%)**: Implementación de RAG, uso de LangChain/cadenas y agentes. (El dominio más pesado).
-  2. **Assembling & Deploying (22%)**: Configuración de endpoints en Model Serving e integración con MLflow.
-  3. **Design Applications (14%)**: Técnicas avanzadas de prompting y diseño de flujos de trabajo.
-  4. **Data Preparation (14%)**: Estrategias de chunking, extracción y embeddings.
-  5. **Evaluation & Monitoring (12%)**: MLflow Evaluate, monitoreo en tiempo real e Inference Tables.
-  6. **Governance (8%)**: Control de accesos en Unity Catalog y seguridad de datos sensibles (PII).
-
-La estrategia de estudio óptima consiste en dominar primero el desarrollo de aplicaciones y despliegue (que representan el 52% del examen), para luego consolidar los módulos de preparación de datos, gobernanza y monitoreo.
+* **DBRX y Mixture of Experts (MoE):** Es un modelo abierto y desagregado. En lugar de procesar cada token con todos sus parámetros, DBRX activa únicamente un subconjunto de "expertos" especializados por palabra. Esto reduce significativamente los tiempos de cómputo y el coste por token en Mosaic AI Model Serving, manteniendo una precisión similar a modelos densos mucho más grandes.
+* **El efecto "Lost in the Middle":** Aunque incrementemos la ventana de contexto de un modelo (por ejemplo, a 32K o 128K tokens), la atención del LLM decae en la zona media de la entrada. Los datos cruciales para la consulta deben colocarse al principio o al final del prompt, o filtrarse rigurosamente antes mediante Vector Search para evitar que se pasen por alto.
+* **Cálculo de Tokens:** Recuerda que la correspondencia habitual en inglés es de aproximadamente **1 token ≈ 0.75 palabras** (o 100 tokens ≈ 75 palabras). Este factor es vital al estimar costes de API, límites de cuotas y la longitud total permitida en tu ventana de contexto.
+* **Flujo RAG de Extremo a Extremo en Databricks:** La arquitectura RAG empresarial en Databricks se integra de forma nativa:
+  1. Los datos sin procesar se almacenan y actualizan en **Delta Lake**.
+  2. Se procesan y convierten en embeddings con modelos alojados en **Model Serving**.
+  3. Los vectores se indexan en **Mosaic AI Vector Search**, el cual se sincroniza en tiempo real de forma automática.
+  4. Todo el flujo, desde las tablas origen hasta el endpoint de inferencia, queda registrado y gobernado bajo **Unity Catalog** para garantizar el cumplimiento normativo y el control de accesos.
 
 ¿Qué concepto de este repaso te ha parecido el más retador? ¡Cuéntame en los comentarios y sigamos construyendo este puente al Machine Learning!
