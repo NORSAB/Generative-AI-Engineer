@@ -79,25 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // FIGURA 3: PIPELINE RAG
   // ==========================================
   const steps = document.querySelectorAll('.rag-step');
-  const explanationBox = document.getElementById('rag-explanation');
-
-  const stepExplanations = {
-    1: '<strong>Paso 1: Pregunta del Usuario</strong><br>El usuario escribe su duda en lenguaje natural (ej. "¿Cuáles son los límites de viáticos de la empresa?"). Esta pregunta se convierte al vuelo en un embedding vectorial.',
-    2: '<strong>Paso 2: Vector Search (Búsqueda Semántica)</strong><br>El embedding de la pregunta se contrasta contra el índice de Vector Search. Databricks localiza en milisegundos los "chunks" o fragmentos de texto más cercanos semánticamente en Delta Lake.',
-    3: '<strong>Paso 3: Prompt Enriquecido (Aumentado)</strong><br>Los fragmentos recuperados se inyectan como "contexto" dentro del prompt original. Esto ancla la respuesta del modelo a datos reales de la organización.',
-    4: '<strong>Paso 4: Inferencia del LLM (Generación)</strong><br>El LLM recibe el prompt enriquecido y redacta la respuesta final basándose únicamente en la información proporcionada. Cero alucinaciones.'
-  };
-
   steps.forEach(step => {
-    const handleStepEvent = () => {
+    step.addEventListener('mouseenter', () => {
       steps.forEach(s => s.classList.remove('active'));
       step.classList.add('active');
-      const stepNum = step.getAttribute('data-step');
-      explanationBox.innerHTML = stepExplanations[stepNum];
-    };
-
-    step.addEventListener('mouseenter', handleStepEvent);
-    step.addEventListener('click', handleStepEvent);
+    });
   });
 
   // ==========================================
@@ -105,22 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const compColumns = document.querySelectorAll('.comp-column');
   const compTabs = document.querySelectorAll('.tab-btn');
-  const compDetailsPane = document.getElementById('comp-details-box');
-  const compExplanationText = document.getElementById('comp-explanation');
 
   if (compColumns.length > 0) {
-    const explanations = {
-      classic: '<strong>Classic RAG (Búsqueda de Vectores Secuencial)</strong><br>Busca los fragmentos (chunks) más relevantes en base al coseno de similitud semántica. Es extremadamente rápido y simple de implementar. Ideal para consultas directas sobre documentación técnica en <strong>Mosaic AI Vector Search</strong>.',
-      graph: '<strong>Graph RAG (Búsqueda Semántica en Grafos de Conocimiento)</strong><br>Extrae entidades y relaciones semánticas del texto. Conecta ideas lejanas que no comparten palabras clave comunes. En Databricks se integra combinando tablas Delta estructuradas y algoritmos relacionales.',
-      agentic: '<strong>Agentic RAG (Agente Autónomo de Razonamiento)</strong><br>El modelo evalúa la consulta y decide qué herramientas usar (Vector DB, Web, APIs). Incluye un bucle de auto-corrección (Self-Evaluation) que valida si la respuesta cumple el criterio antes de entregarla. Soportado nativamente por <strong>Mosaic AI Agent Framework</strong>.'
-    };
-
-    const colors = {
-      classic: 'var(--classic-primary)',
-      graph: 'var(--graph-primary)',
-      agentic: 'var(--agentic-primary)'
-    };
-
     function activateCategory(type) {
       compColumns.forEach(col => {
         col.classList.remove('active');
@@ -142,9 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
           col.classList.add('active-tab');
         }
       });
-
-      if (compExplanationText) compExplanationText.innerHTML = explanations[type];
-      if (compDetailsPane) compDetailsPane.style.borderLeftColor = colors[type];
     }
 
     activateCategory('classic');
