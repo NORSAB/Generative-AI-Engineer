@@ -422,15 +422,7 @@ body {
   position: relative;
 }
 
-@media (max-width: 768px) {
-  .rag-pipeline {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  .rag-arrow {
-    transform: rotate(90deg);
-  }
-}
+/* No mobile collapse for pipeline */
 
 .rag-step {
   flex: 1;
@@ -760,52 +752,7 @@ body {
 .comp-column[data-type="graph"] .tag.primary-tag { background: var(--graph-bg); color: var(--graph-primary); border-color: var(--graph-border); }
 .comp-column[data-type="agentic"] .tag.primary-tag { background: var(--agentic-bg); color: var(--agentic-primary); border-color: var(--agentic-border); }
 
-@media (max-width: 768px) {
-  .comp-tabs {
-    display: flex;
-  }
-  .columns-grid {
-    grid-template-columns: 1fr;
-    overflow-y: auto;
-  }
-  .columns-grid::-webkit-scrollbar {
-    width: 4px;
-  }
-  .columns-grid::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .columns-grid::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 2px;
-  }
-  .comp-column {
-    display: none;
-    min-height: auto;
-    padding: 0.4rem;
-  }
-  .comp-column.active-tab {
-    display: flex;
-  }
-  .flow-diagram {
-    gap: 0.25rem;
-  }
-  .flow-node {
-    padding: 0.35rem 0.25rem;
-    font-size: 0.68rem;
-  }
-  .flow-arrow {
-    height: 10px;
-  }
-  .flow-arrow svg {
-    width: 8px;
-    height: 8px;
-    transform: rotate(90deg);
-  }
-  .summary-tags {
-    margin-top: 0.4rem;
-    padding-top: 0.3rem;
-  }
-}
+/* No mobile collapse for comparativa columns */
 
 /* HELPER CLASSES */
 .hidden {
