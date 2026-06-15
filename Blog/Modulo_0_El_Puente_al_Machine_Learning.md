@@ -79,7 +79,7 @@ Databricks engloba todo su desarrollo de IA generativa bajo la marca **Mosaic AI
 
 Para estructurar una aplicación que no alucine y que conozca los datos internos de tu empresa, usamos la arquitectura **RAG (Retrieval-Augmented Generation)**. A continuación, puedes ver cómo se orquesta este flujo paso a paso:
 
-<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html?v=9" width="100%" height="240" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
+<iframe src="https://norsab.github.io/Generative-AI-Engineer/Blog/figuras/figura3.html?v=10" width="100%" height="175" style="border:none; border-radius:12px; background:#0B0F19; overflow:hidden;" title="Arquitectura RAG (Retrieval-Augmented Generation)"></iframe>
 
 ### El Flujo de Datos en RAG Paso a Paso:
 1. **Pregunta del Usuario (Query):** Escribes tu duda en lenguaje natural (ej. *"¿Cuál es la política de viáticos?"*). Esta pregunta se vectoriza al vuelo usando un modelo de embeddings.
