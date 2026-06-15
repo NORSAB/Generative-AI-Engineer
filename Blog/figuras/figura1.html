@@ -108,9 +108,9 @@
       opacity: 0.85;
     }
     #figura-tokenizacion .grid-two-cols {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1.5rem !important;
     }
     #figura-tokenizacion .visual-pane {
       background-color: var(--pane-bg);
@@ -201,14 +201,16 @@
     }
     #figura-tokenizacion .vector-space {
       width: 100%;
+      max-width: 450px;
       height: auto;
       display: block;
       overflow: visible;
+      margin: 0 auto;
     }
     #figura-tokenizacion .vector-space text {
       fill: #FFFFFF !important;
       font-weight: 700;
-      font-size: 14px !important;
+      font-size: 15px !important;
       stroke: none !important;
       text-shadow: none !important;
       paint-order: fill !important;
