@@ -66,7 +66,7 @@ La alternativa es el Prompt Chaining:
 2. Segundo paso. Un segundo prompt analiza esa salida y verifica si cumple con las reglas establecidas.
 3. Tercer paso. Un prompt final redacta la respuesta utilizando solo la información verificada.
 
-![Flujo de Prompt Chaining](figuras/prompt_chaining.png)
+![Flujo de Prompt Chaining](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/prompt_chaining.png)
 
 * Ventajas. Reduces el consumo de tokens por llamada, facilitas la depuración de errores y aumentas la precisión general de la aplicación.
 
