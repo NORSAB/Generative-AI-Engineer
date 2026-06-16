@@ -22,12 +22,12 @@ La pieza clave detrás de esto es la arquitectura Transformer. Se presentó en 2
 #### Contexto A: Financiero ("El banco estaba lleno de dinero")
 El término **"banco"** recibe su mayor peso de atención (95%) de **"dinero"**, fijando su significado en una entidad bancaria.
 
-![Auto-Atención Contexto Financiero](figuras/figura_2_atencion_a.png)
+![Auto-Atención Contexto Financiero](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/figura_2_atencion_a.png)
 
 #### Contexto B: Mobiliario ("El banco estaba pintado de verde")
 El término **"banco"** recibe su mayor peso de atención de **"verde"** y **"pintado"**, definiendo su significado en un asiento.
 
-![Auto-Atención Contexto Mobiliario](figuras/figura_2_atencion_b.png)
+![Auto-Atención Contexto Mobiliario](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/figura_2_atencion_b.png)
 
 ---
 
@@ -52,7 +52,7 @@ Estos tres conceptos son fundamentales para el diseño de infraestructura.
 * Ventana de contexto. Representa el límite de memoria del modelo en una sola interacción. DBRX cuenta con una ventana de 32,000 tokens. Si le envías un texto que supere su ventana, el modelo empezará a olvidar los fragmentos más antiguos del historial.
 * Embeddings. Son traducciones matemáticas del significado de las palabras. Cada fragmento de texto se convierte en un vector, una lista de números en un espacio de muchas dimensiones. Lo interesante es que los términos con significados parecidos quedan ubicados en zonas cercanas dentro de este espacio matemático. Esto es lo que permite hacer búsquedas semánticas eficaces sin depender de palabras clave exactas.
 
-![De Texto a Vectores: Tokenización y Embeddings](figuras/figura_1_tokenizacion.png)
+![De Texto a Vectores: Tokenización y Embeddings](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/figura_1_tokenizacion.png)
 
 ---
 
@@ -94,7 +94,7 @@ Databricks organiza sus servicios de inteligencia artificial bajo el nombre de M
 
 Para evitar alucinaciones y darle acceso a los datos privados de la compañía, implementamos la arquitectura de Generación Aumentada por Recuperación (RAG). El proceso sigue este flujo:
 
-![Arquitectura RAG (Retrieval-Augmented Generation)](figuras/figura_3_rag.png)
+![Arquitectura RAG (Retrieval-Augmented Generation)](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/figura_3_rag.png)
 
 ### El flujo de RAG paso a paso:
 1. Petición del usuario. Haces una consulta en lenguaje natural. Esta pregunta se convierte en un vector matemático al vuelo.
@@ -110,7 +110,7 @@ La complejidad del flujo varía según las necesidades del negocio:
 * Graph RAG. Utiliza grafos de conocimiento guardados en tablas Delta para conectar entidades y relaciones complejas entre distintas fuentes de datos.
 * Agentic RAG. Es el más flexible. Utiliza un agente que evalúa la pregunta y decide de manera autónoma qué herramientas externas o bases de datos consultar, aplicando bucles de autocorrección antes de dar la respuesta final.
 
-![Evolución de Arquitecturas RAG](figuras/figura_4_rag_evolucion.png)
+![Evolución de Arquitecturas RAG](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/figura_4_rag_evolucion.png)
 
 ---
 
