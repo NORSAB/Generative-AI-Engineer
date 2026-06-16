@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 840" width="100%" height="100%">
+  <style>
+    :root {
+      --glow-1: #00F2FE;        /* Cyan */
+      --glow-2: #7F00FF;        /* Violeta */
+      --glow-3: #1A80FF;        /* Azul */
+      --text-color: #FFFFFF;
+      --accent-color: #00F2FE;
+      --shield-bg: #121A2E;     /* Azul marino sólido */
+    }
+    .shield-body {
+      fill: var(--shield-bg);
+      stroke: url(#shield-border-grad);
+      stroke-width: 5px;
+      filter: drop-shadow(0px 12px 35px rgba(0, 0, 0, 0.9));
+    }
+    .shield-inner-glow {
+      fill: none;
+      stroke: var(--glow-1);
+      stroke-width: 2px;
+      opacity: 0.5;
+    }
+    .connection-line {
+      stroke: url(#line-grad);
+      stroke-width: 10px;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .connection-node {
+      fill: #080B11;
+      stroke: var(--glow-3);
+      stroke-width: 6px;
+      filter: drop-shadow(0px 0px 12px var(--glow-3));
+    }
+    .connection-node-accent {
+      fill: #080B11;
+      stroke: var(--glow-2);
+      stroke-width: 6px;
+      filter: drop-shadow(0px 0px 12px var(--glow-2));
+    }
+    
+    /* Typography Cover Right */
+    .cover-module {
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      fill: var(--accent-color);
+      letter-spacing: 12px;
+    }
+    .cover-main-title {
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 76px;
+      fill: #FFFFFF;
+      letter-spacing: 1px;
+    }
+    .cover-main-title-highlight {
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 76px;
+      fill: var(--accent-color);
+      letter-spacing: 1px;
+    }
+    .cover-sub-title {
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 28px;
+      fill: #94A3B8;
+      letter-spacing: 1px;
+    }
+    .cover-tagline {
+      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      fill: #E2E8F0;
+      letter-spacing: 4px;
+    }
+  </style>
+  
+  <defs>
+    <clipPath id="shield-clip">
+      <path d="M 400 100 L 700 160 L 700 400 Q 700 700 400 700 Q 100 700 100 400 L 100 160 Z" />
+    </clipPath>
+
+    <pattern id="dot-grid" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="1.5" fill="var(--glow-1)" opacity="0.15" />
+    </pattern>
+
+    <pattern id="bg-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1E293B" stroke-width="0.5"/>
+    </pattern>
+
+    <linearGradient id="shield-border-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    
+    <linearGradient id="line-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--glow-2)"/>
+      <stop offset="100%" stop-color="var(--glow-1)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo Oscuro -->
+  <rect width="1600" height="840" fill="#0B0F19"/>
+  <rect width="1600" height="840" fill="url(#bg-grid)"/>
+
+  <!-- Left Side: Escudo (escala 1.05, centrado verticalmente) -->
+  <g transform="translate(100, 70) scale(1.05)">
+    <!-- Escudo Base -->
+    <path class="shield-body" d="
+      M 400 100 
+      L 700 160 
+      L 700 400 
+      Q 700 700 400 700 
+      Q 100 700 100 400 
+      L 100 160 
+      Z" />
+
+    <!-- Patrón de cuadrícula interno enmascarado -->
+    <rect width="800" height="800" fill="url(#dot-grid)" clip-path="url(#shield-clip)" />
+
+    <!-- Borde Interno Neon -->
+    <path class="shield-inner-glow" d="
+      M 400 115 
+      L 685 172 
+      L 685 400 
+      Q 685 685 400 685 
+      Q 115 685 115 400 
+      L 115 172 
+      Z" />
+
+    <!-- Learning Path Network -->
+    <g id="path-network" opacity="0.95" transform="translate(400, 400) scale(1.06) translate(-400, -400)">
+      <path d="M 310 550 Q 360 460 490 460" class="connection-line" />
+      <path d="M 490 460 Q 430 350 330 340" class="connection-line" />
+      <path d="M 330 340 Q 400 295 460 250" class="connection-line" />
+      
+      <circle cx="310" cy="550" r="18" class="connection-node-accent" />
+      <circle cx="310" cy="550" r="8" fill="var(--glow-2)" />
+      
+      <circle cx="490" cy="460" r="18" class="connection-node" />
+      <circle cx="490" cy="460" r="8" fill="var(--glow-1)" />
+      
+      <circle cx="330" cy="340" r="18" class="connection-node-accent" />
+      <circle cx="330" cy="340" r="8" fill="var(--glow-2)" />
+      
+      <polygon points="460 222, 488 250, 460 278, 432 250" fill="#080B11" stroke="var(--glow-1)" stroke-width="6" filter="drop-shadow(0px 0px 14px var(--glow-1))" />
+      <polygon points="460 235, 475 250, 460 265, 445 250" fill="var(--glow-1)" />
+    </g>
+  </g>
+
+  <!-- Right Side: Typography Cover -->
+  <g transform="translate(800, 0)">
+    <!-- Módulo indicator -->
+    <text x="0" y="270" class="cover-module">MÓDULO 1</text>
+    
+    <!-- Title: Prompt Engineering -->
+    <text x="0" y="380" class="cover-main-title">Prompt Engineering</text>
+    
+    <!-- Title: Avanzado -->
+    <text x="0" y="475" class="cover-main-title-highlight">Avanzado</text>
+    
+    <!-- Subtitle: Diseñando Entradas para LLMs en Producción -->
+    <text x="0" y="560" class="cover-sub-title">Diseñando Entradas para LLMs en Producción</text>
+
+    <!-- Separador sutil -->
+    <line x1="0" y1="620" x2="650" y2="620" stroke="#1E293B" stroke-width="2" />
+    
+    <!-- Tagline: DATABRICKS ENGINEER -->
+    <g transform="translate(0, 665)">
+      <!-- Circuito indicador decorativo -->
+      <circle cx="15" cy="0" r="6" fill="#00F2FE" />
+      <line x1="21" y1="0" x2="50" y2="0" stroke="#00F2FE" stroke-width="2" />
+      <text x="70" y="8" class="cover-tagline">DATABRICKS ENGINEER</text>
+    </g>
+  </g>
+</svg>
