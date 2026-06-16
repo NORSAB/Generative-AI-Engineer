@@ -1,179 +1,169 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 840" width="100%" height="100%">
   <style>
     :root {
-      --glow-1: #00F2FE;        /* Cyan */
-      --glow-2: #7F00FF;        /* Violeta */
-      --glow-3: #1A80FF;        /* Azul */
-      --text-color: #FFFFFF;
-      --accent-color: #00F2FE;
-      --shield-bg: #121A2E;     /* Azul marino sólido */
-    }
-    .shield-body {
-      fill: var(--shield-bg);
-      stroke: url(#shield-border-grad);
-      stroke-width: 5px;
-      filter: drop-shadow(0px 12px 35px rgba(0, 0, 0, 0.9));
-    }
-    .shield-inner-glow {
-      fill: none;
-      stroke: var(--glow-1);
-      stroke-width: 2px;
-      opacity: 0.5;
-    }
-    .connection-line {
-      stroke: url(#line-grad);
-      stroke-width: 10px;
-      stroke-linecap: round;
-      fill: none;
-    }
-    .connection-node {
-      fill: #080B11;
-      stroke: var(--glow-3);
-      stroke-width: 6px;
-      filter: drop-shadow(0px 0px 12px var(--glow-3));
-    }
-    .connection-node-accent {
-      fill: #080B11;
-      stroke: var(--glow-2);
-      stroke-width: 6px;
-      filter: drop-shadow(0px 0px 12px var(--glow-2));
+      --bg-dark: #0B0F19;
+      --neon-cyan: #00F2FE;
+      --neon-purple: #7F00FF;
+      --neon-blue: #1A80FF;
+      --neon-green: #10B981;
     }
     
-    /* Typography Cover Right */
-    .cover-module {
-      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-      font-weight: 700;
-      font-size: 26px;
-      fill: var(--accent-color);
-      letter-spacing: 12px;
+    .glow-cyan {
+      filter: url(#glow-c);
     }
-    .cover-main-title {
-      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 76px;
-      fill: #FFFFFF;
-      letter-spacing: 1px;
+    .glow-purple {
+      filter: url(#glow-p);
     }
-    .cover-main-title-highlight {
-      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-      font-weight: 800;
-      font-size: 76px;
-      fill: var(--accent-color);
-      letter-spacing: 1px;
+    
+    /* Partículas dispersas */
+    .particle-raw {
+      fill: var(--neon-purple);
+      opacity: 0.25;
     }
-    .cover-sub-title {
-      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 28px;
-      fill: #94A3B8;
-      letter-spacing: 1px;
+    
+    /* Partículas estructuradas */
+    .particle-aligned {
+      fill: var(--neon-cyan);
+      opacity: 0.85;
+      filter: drop-shadow(0px 0px 8px var(--neon-cyan));
     }
-    .cover-tagline {
-      font-family: 'Outfit', 'Inter', system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 22px;
-      fill: #E2E8F0;
-      letter-spacing: 4px;
+    .particle-validated {
+      fill: var(--neon-green);
+      opacity: 0.9;
+      filter: drop-shadow(0px 0px 10px var(--neon-green));
+    }
+    
+    /* Líneas de flujo de información */
+    .flow-line {
+      fill: none;
+      stroke-width: 1.5;
+      opacity: 0.2;
+    }
+    .flow-line-bright {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      opacity: 0.75;
     }
   </style>
-  
+
   <defs>
-    <clipPath id="shield-clip">
-      <path d="M 400 100 L 700 160 L 700 400 Q 700 700 400 700 Q 100 700 100 400 L 100 160 Z" />
-    </clipPath>
+    <!-- Filtros de brillo de neón -->
+    <filter id="glow-c" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <filter id="glow-p" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
 
-    <pattern id="dot-grid" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
-      <circle cx="15" cy="15" r="1.5" fill="var(--glow-1)" opacity="0.15" />
-    </pattern>
-
-    <pattern id="bg-grid" width="60" height="60" patternUnits="userSpaceOnUse">
-      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1E293B" stroke-width="0.5"/>
-    </pattern>
-
-    <linearGradient id="shield-border-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="50%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
+    <!-- Gradientes de flujo -->
+    <linearGradient id="grad-cyan-blue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--neon-purple)"/>
+      <stop offset="50%" stop-color="var(--neon-blue)"/>
+      <stop offset="100%" stop-color="var(--neon-cyan)"/>
     </linearGradient>
     
-    <linearGradient id="line-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="var(--glow-2)"/>
-      <stop offset="100%" stop-color="var(--glow-1)"/>
+    <linearGradient id="grad-cyan-green" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--neon-cyan)"/>
+      <stop offset="100%" stop-color="var(--neon-green)"/>
     </linearGradient>
+
+    <!-- Rejilla técnica de fondo -->
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1E293B" stroke-width="0.8" opacity="0.5" />
+    </pattern>
+
+    <radialGradient id="bg-radial" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#111726" />
+      <stop offset="70%" stop-color="#0B0F19" />
+      <stop offset="100%" stop-color="#070A10" />
+    </radialGradient>
   </defs>
 
-  <!-- Fondo Oscuro -->
-  <rect width="1600" height="840" fill="#0B0F19"/>
-  <rect width="1600" height="840" fill="url(#bg-grid)"/>
+  <!-- Lienzo y Rejilla -->
+  <rect width="1600" height="840" fill="url(#bg-radial)" />
+  <rect width="1600" height="840" fill="url(#grid)" />
 
-  <!-- Left Side: Escudo (escala 1.05, centrado verticalmente) -->
-  <g transform="translate(100, 70) scale(1.05)">
-    <!-- Escudo Base -->
-    <path class="shield-body" d="
-      M 400 100 
-      L 700 160 
-      L 700 400 
-      Q 700 700 400 700 
-      Q 100 700 100 400 
-      L 100 160 
-      Z" />
+  <!-- FLUJO VECTORIAL DE INFORMACIÓN (De Izquierda a Derecha) -->
 
-    <!-- Patrón de cuadrícula interno enmascarado -->
-    <rect width="800" height="800" fill="url(#dot-grid)" clip-path="url(#shield-clip)" />
-
-    <!-- Borde Interno Neon -->
-    <path class="shield-inner-glow" d="
-      M 400 115 
-      L 685 172 
-      L 685 400 
-      Q 685 685 400 685 
-      Q 115 685 115 400 
-      L 115 172 
-      Z" />
-
-    <!-- Learning Path Network -->
-    <g id="path-network" opacity="0.95" transform="translate(400, 400) scale(1.06) translate(-400, -400)">
-      <path d="M 310 550 Q 360 460 490 460" class="connection-line" />
-      <path d="M 490 460 Q 430 350 330 340" class="connection-line" />
-      <path d="M 330 340 Q 400 295 460 250" class="connection-line" />
-      
-      <circle cx="310" cy="550" r="18" class="connection-node-accent" />
-      <circle cx="310" cy="550" r="8" fill="var(--glow-2)" />
-      
-      <circle cx="490" cy="460" r="18" class="connection-node" />
-      <circle cx="490" cy="460" r="8" fill="var(--glow-1)" />
-      
-      <circle cx="330" cy="340" r="18" class="connection-node-accent" />
-      <circle cx="330" cy="340" r="8" fill="var(--glow-2)" />
-      
-      <polygon points="460 222, 488 250, 460 278, 432 250" fill="#080B11" stroke="var(--glow-1)" stroke-width="6" filter="drop-shadow(0px 0px 14px var(--glow-1))" />
-      <polygon points="460 235, 475 250, 460 265, 445 250" fill="var(--glow-1)" />
-    </g>
+  <!-- Líneas de trayectoria (Canales por donde fluyen las partículas) -->
+  <g stroke="url(#grad-cyan-blue)">
+    <path d="M 100 220 L 700 220 Q 800 220 900 320 T 1500 320" class="flow-line" />
+    <path d="M 100 320 L 600 320 Q 700 420 800 420 T 1500 420" class="flow-line" />
+    <path d="M 100 420 L 700 420 Q 800 420 900 520 T 1500 520" class="flow-line" />
+    <path d="M 100 520 L 600 520 Q 700 420 800 420 T 1500 420" class="flow-line" />
+    <path d="M 100 620 L 700 620 Q 800 620 900 520 T 1500 520" class="flow-line" />
   </g>
 
-  <!-- Right Side: Typography Cover -->
-  <g transform="translate(800, 0)">
-    <!-- Módulo indicator -->
-    <text x="0" y="270" class="cover-module">MÓDULO 1</text>
-    
-    <!-- Title: Prompt Engineering -->
-    <text x="0" y="380" class="cover-main-title">Prompt Engineering</text>
-    
-    <!-- Title: Avanzado -->
-    <text x="0" y="475" class="cover-main-title-highlight">Avanzado</text>
-    
-    <!-- Subtitle: Diseñando Entradas para LLMs en Producción -->
-    <text x="0" y="560" class="cover-sub-title">Diseñando Entradas para LLMs en Producción</text>
+  <!-- Líneas de flujo activas de alta intensidad -->
+  <path d="M 400 320 Q 550 320 650 420 T 1150 420" class="flow-line-bright" stroke="url(#grad-cyan-blue)" />
+  <path d="M 300 520 Q 450 520 550 420 T 1250 420" class="flow-line-bright" stroke="url(#grad-cyan-blue)" />
+  <path d="M 600 420 Q 750 420 850 520 T 1350 520" class="flow-line-bright" stroke="url(#grad-cyan-green)" />
 
-    <!-- Separador sutil -->
-    <line x1="0" y1="620" x2="650" y2="620" stroke="#1E293B" stroke-width="2" />
+  <!-- LADO IZQUIERDO: Caos y datos no estructurados (Partículas dispersas en el espacio) -->
+  <g>
+    <!-- Partículas violetas dispersas -->
+    <circle cx="150" cy="250" r="16" class="particle-raw" />
+    <circle cx="190" cy="480" r="24" class="particle-raw" />
+    <circle cx="220" cy="320" r="12" class="particle-raw" />
+    <circle cx="280" cy="580" r="20" class="particle-raw" />
+    <circle cx="320" cy="220" r="14" class="particle-raw" />
+    <circle cx="350" cy="400" r="28" class="particle-raw" />
+    <circle cx="420" cy="620" r="18" class="particle-raw" />
+    <circle cx="460" cy="300" r="16" class="particle-raw" />
+  </g>
+
+  <!-- CENTRO: Las Barras de Alineamiento del Prompt (Filtros de difracción de información) -->
+  <g class="glow-cyan">
+    <!-- Columna de Filtro 1 (System Rules) -->
+    <rect x="650" y="180" width="8" height="480" fill="var(--neon-blue)" opacity="0.3" rx="4" />
+    <rect x="648" y="280" width="12" height="120" fill="var(--neon-cyan)" opacity="0.8" rx="6" />
+    <rect x="648" y="460" width="12" height="140" fill="var(--neon-cyan)" opacity="0.8" rx="6" />
+
+    <!-- Columna de Filtro 2 (Few-Shot Patterning) -->
+    <rect x="800" y="180" width="8" height="480" fill="var(--neon-blue)" opacity="0.3" rx="4" />
+    <rect x="798" y="320" width="12" height="200" fill="var(--neon-cyan)" opacity="0.9" rx="6" />
+  </g>
+  
+  <g class="glow-purple">
+    <!-- Nodos centrales de control (Alineadores de tokens) -->
+    <circle cx="654" cy="340" r="12" fill="var(--neon-purple)" />
+    <circle cx="654" cy="530" r="12" fill="var(--neon-purple)" />
+    <circle cx="804" cy="420" r="12" fill="var(--neon-purple)" />
+  </g>
+
+  <!-- LADO DERECHO: Estructuración y tokens alineados en fase de salida -->
+  <g>
+    <!-- Tokens alineados (Cyan) que fluyen por la ventana de contexto -->
+    <rect x="920" y="308" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 932, 320)" />
+    <rect x="1040" y="308" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 1052, 320)" />
     
-    <!-- Tagline: DATABRICKS ENGINEER -->
-    <g transform="translate(0, 665)">
-      <!-- Circuito indicador decorativo -->
-      <circle cx="15" cy="0" r="6" fill="#00F2FE" />
-      <line x1="21" y1="0" x2="50" y2="0" stroke="#00F2FE" stroke-width="2" />
-      <text x="70" y="8" class="cover-tagline">DATABRICKS ENGINEER</text>
-    </g>
+    <rect x="980" y="408" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 992, 420)" />
+    <rect x="1100" y="408" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 1112, 420)" />
+    <rect x="1220" y="408" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 1232, 420)" />
+
+    <!-- Tokens validados finales (Verdes) saliendo de la tubería -->
+    <rect x="1340" y="408" width="24" height="24" class="particle-validated" rx="3" transform="rotate(45, 1352, 420)" />
+    <rect x="1460" y="408" width="24" height="24" class="particle-validated" rx="3" transform="rotate(45, 1472, 420)" />
+
+    <rect x="1160" y="508" width="24" height="24" class="particle-aligned" rx="3" transform="rotate(45, 1172, 520)" />
+    <rect x="1280" y="508" width="24" height="24" class="particle-validated" rx="3" transform="rotate(45, 1292, 520)" />
+    <rect x="1400" y="508" width="24" height="24" class="particle-validated" rx="3" transform="rotate(45, 1412, 520)" />
+  </g>
+
+  <!-- Efectos decorativos de dispersión de luz en el extremo derecho -->
+  <g opacity="0.3" class="glow-cyan">
+    <circle cx="1520" cy="420" r="4" fill="var(--neon-green)" />
+    <circle cx="1550" cy="380" r="2" fill="var(--neon-cyan)" />
+    <circle cx="1560" cy="450" r="3" fill="var(--neon-green)" />
   </g>
 </svg>
