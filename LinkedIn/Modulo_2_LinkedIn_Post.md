@@ -1,4 +1,4 @@
-I recently realized that quick carousels and short posts are not enough to explain the technical details needed for enterprise LLM applications. That is why I have resumed writing on my technical blog. Building production-grade RAG systems on Databricks requires a software engineering mindset, focusing on incremental ingestion, chunking strategies, and retrieval precision.
+After diving into prompt engineering last week, this week I focused on the backbone of enterprise GenAI: data ingestion and RAG architecture. You can write the perfect prompt, but if your retriever feeds the model junk data, it will hallucinate. Building production-grade RAG systems on Databricks requires a software engineering mindset, focusing on incremental ingestion, chunking strategies, and retrieval precision.
 
 This week, for the Databricks Generative AI Engineer certification, I analyzed the core concepts of Module 2:
 - Structured Ingestion: Leveraging Auto Loader and the Medallion Architecture (Bronze to Gold) for RAG.
@@ -14,7 +14,7 @@ I am also sharing the study carousel below, covering the same topics in both Eng
 
 ---
 
-Decidí reabrir el blog porque para llevar modelos a producción no sirve improvisar. Si queremos integrar inteligencia artificial en serio en la arquitectura de datos, necesitamos hablar de infraestructura, control de costos y seguridad en el RAG. Estas guías detallan lo que los manuales rápidos omiten.
+Luego de analizar prompt engineering la semana pasada, esta semana nos metemos con el verdadero núcleo de la IA generativa empresarial: la ingesta de datos y la arquitectura RAG. Puedes diseñar el mejor prompt del mundo, pero si tu motor de búsqueda le pasa datos ruidosos o incompletos al modelo, vas a tener alucinaciones en producción.
 
 Espero que el contenido del blog y el carrusel adjunto les sirvan para estudiar o para discutir estos temas técnicos en sus equipos de ingeniería. ¿Cómo manejan la fragmentación en sus desarrollos? ¿Usan tokens fijos, ventana deslizante o ya migraron a chunking semántico?
 
