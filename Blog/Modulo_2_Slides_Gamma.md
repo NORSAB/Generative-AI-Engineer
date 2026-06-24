@@ -2,7 +2,7 @@
 
 Este documento contiene la estructura de diapositivas para tu presentación en **Gamma**, dividida en dos secciones independientes: **Inglés** (versión principal de negocios) y **Español** (versión de soporte). 
 
-Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar desde tu carpeta local `figuras/Modulo_2/` para ilustrar la presentación.
+Se han eliminado todas las referencias a capturas de Napkin AI para evitar inconsistencias de idioma en la presentación. Solo se utilizan las figuras de marca en alta resolución (`figuras/Modulo_2/`).
 
 ---
 
@@ -35,8 +35,7 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
   * **3. Chunking:** Split clean text into context-sized pieces.
   * **4. Embeddings:** Compute vectors using Databricks Model Serving.
   * **5. Indexing:** Load gold data to Unity Catalog, ready for Vector Search.
-* **Visual Asset to Drag-and-Drop:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Pipeline de Limpieza de Contenido.png`
+* *(Note: Build this as a native Gamma horizontal timeline block)*
 
 ---
 
@@ -54,12 +53,10 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
 ## Slide 5: The Chunking Decision Matrix
 * **Title:** Choosing the Right Split Method
 * **Core Points:**
-  * **Static vs. Dynamic:** Hard boundaries vs. content-aware divisions.
-  * **Simple vs. Complex:** Low computational overhead vs. model-dependent inference.
+  * **Static vs. Dynamic:** Hard boundaries (Fixed-Length, Sentence) vs. content-aware divisions (Semantic).
+  * **Simple vs. Complex:** Low computational overhead (Fixed-Length) vs. model-dependent inference (Semantic).
   * **Sliding Window:** Adds overlap to avoid losing context at chunk edges.
   * **Semantic Chunking:** The ultimate dynamic method; splits only when theme similarity drops.
-* **Visual Asset to Drag-and-Drop:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Matriz de Fragmentación RAG.png`
 
 ---
 
@@ -111,8 +108,6 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
   * **Stage 1 (Vector Search):** Rapidly finds the Top-100 candidates using Cosine Distance.
   * **Stage 2 (Reranker):** A Cross-Encoder model recalculates deep semantic relevance.
   * **Final Output (Top-5):** Delivers only the highest-quality chunks, preventing prompt pollution.
-* **Visual Asset to Drag-and-Drop:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Mejora de la Búsqueda Vectorial con Reranking.png`
 
 ---
 
@@ -154,8 +149,7 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
   * **3. Chunking:** Fragmentación controlada del texto limpio.
   * **4. Embeddings:** Generación de vectores vía Databricks Model Serving.
   * **5. Indexación:** Carga final en Unity Catalog para Vector Search.
-* **Imagen a Arrastrar:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Pipeline de Limpieza de Contenido.png`
+* *(Nota: Construir como una línea de tiempo horizontal nativa en Gamma)*
 
 ---
 
@@ -173,12 +167,10 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
 ## Slide 5: Matriz de Decisiones de Fragmentación
 * **Título:** Selección del Método de Corte
 * **Puntos Centrales:**
-  * **Estático vs. Dinámico:** Límites fijos vs. límites conscientes del contenido.
-  * **Simple vs. Complejo:** Costo de cómputo bajo vs. inferencia de modelos pesados.
-  * **Ventana Deslizante:** Repite tokens en los bordes para mantener la continuidad.
+  * **Estático vs. Dinámico:** Límites fijos (Tokens Fijos, Oración) vs. límites conscientes (Semántico).
+  * **Simple vs. Complejo:** Costo de cómputo bajo (Tokens Fijos) vs. inferencia de modelos pesados (Semántico).
+  * **Ventana Deslizante:** Repite tokens en los bordes para mantener la continuidad del contexto.
   * **Chunking Semántico:** Divide el texto calculando cambios de tema mediante embeddings.
-* **Imagen a Arrastrar:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Matriz de Fragmentación RAG.png`
 
 ---
 
@@ -228,10 +220,8 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
 * **Título:** Embudo de Calidad Semántica
 * **Puntos Centrales:**
   * **Etapa 1 (Búsqueda Vectorial):** Extrae los Top-100 usando similitud rápida de coseno.
-  * **Etapa 2 (Reranker):** Un modelo Cross-Encoder calcula la relevancia profunda de cada par.
+  * **Etapa 2 (Reranker):** Un modelo Cross-Encoder calcula la relevancia profunda de cada par consulta-documento.
   * **Salida Final (Top-5):** Entrega los fragmentos óptimos al LLM sin contaminar el prompt.
-* **Imagen a Arrastrar:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_2\Mejora de la Búsqueda Vectorial con Reranking.png`
 
 ---
 
@@ -239,6 +229,6 @@ Cada diapositiva indica exactamente qué figura o diagrama de Napkin arrastrar d
 * **Título:** Diseño de Sistemas RAG a Escala
 * **Puntos Centrales:**
   * Limpieza previa: Remueve el boilerplate antes de calcular embeddings para ahorrar costos.
-  * Metadatos estándar: Añade URIs, títulos, fechas y permisos a nivel de fragmento.
-  * Mide la latencia: El Reranker añade de 50 a 150ms al flujo; evalúa si vale la pena.
+  * Metadatos estándar: Enlaza URIs, títulos, fechas y permisos a nivel de fragmento.
+  * Mide la latencia: El Reranker añade de 50 a 150ms al flujo; evalúa si vale la pena el impacto.
   * Usa servicios administrados: Aprovecha Databricks Vector Search para indexación sin servidores.
