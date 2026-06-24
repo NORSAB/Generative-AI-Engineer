@@ -7,143 +7,143 @@ date: "Junio 2026"
 
 ![Ruta GenAI Módulo 2 Portada](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/ruta_genai_modulo2_cover_1600x840.png)
 
-Para crear aplicaciones de IA generativa robustas en el entorno corporativo, el Prompt Engineering no basta. Los modelos de lenguaje base no conocen los datos privados de nuestro negocio y tienen límites estrictos en su ventana de contexto. Si intentamos inyectar manuales enteros o miles de filas directamente en el prompt, el sistema se volverá lento, costoso y propenso a fallar.
+Para construir aplicaciones de inteligencia artificial en una empresa, afinar prompts no es suficiente. Los modelos de lenguaje generales no saben nada sobre las bases de datos de nuestro negocio. Además, tienen límites de contexto muy estrictos. Intentar pasarles manuales completos o miles de registros en una sola consulta solo va a disparar los costos, ralentizar el sistema y causar errores de memoria.
 
-La solución estándar de la industria es **RAG (Retrieval-Augmented Generation)**. La idea es sencilla: en lugar de obligar al modelo a memorizar todo, le damos acceso a una base de conocimientos para que consulte la información relevante antes de responder. Piensa en esto como un examen a libro abierto donde un asistente ultra rápido le entrega al alumno solo las páginas exactas que necesita para responder la pregunta.
+Ahí es donde entra **RAG (Retrieval-Augmented Generation)**. La idea detrás de este patrón es muy simple: en lugar de obligar al LLM a memorizar toda la información, le permitimos consultar una base de datos para recuperar lo relevante antes de contestar. Es igual a hacer un examen a libro abierto con un asistente veloz que nos pasa las páginas necesarias en el segundo exacto.
 
-Sin embargo, un sistema RAG es tan bueno como los datos que recupera. Si el motor de búsqueda entrega fragmentos irrelevantes o con ruido, el modelo generará respuestas incorrectas o alucinadas. En esta guía detallada para la certificación de **Databricks Generative AI Engineer Associate**, analizaremos cómo diseñar un pipeline de ingesta de datos de alta calidad utilizando Delta Lake, Unity Catalog y estrategias avanzadas de fragmentación y búsqueda.
+Pero el truco de RAG está en la recuperación. Si el motor de búsqueda le pasa fragmentos llenos de ruido o textos sin sentido, el modelo va a inventar respuestas. Por eso, en esta guía para preparar el examen de **Databricks Generative AI Engineer Associate**, veremos cómo diseñar un pipeline de ingesta sólido utilizando Delta Lake y Unity Catalog, cuidando la fragmentación y el filtrado.
 
 ---
 
-## 1. Pipeline de Limpieza de Contenido (Ingestion Flow)
+## 1. El flujo de limpieza de contenido
 
-Ingresar datos sin depurar a un sistema de búsqueda vectorial garantiza el fracaso. Los documentos corporativos suelen contener ruido de formato, encabezados repetitivos, pies de página y código de marcado que confunden a los modelos de embeddings. 
+Meter información cruda a un motor de búsqueda vectorial es ir directo al fracaso. Los documentos internos suelen tener encabezados de página repetitivos, avisos legales larguísimos, marcado HTML residual y metadatos inútiles que confunden a los embeddings. 
 
-El proceso de preparación de los datos sigue un flujo lineal de cinco etapas clave:
+El pipeline para limpiar y preparar los textos consta de cinco pasos:
 
 ![Pipeline de Limpieza de Contenido Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Pipeline%20de%20Limpieza%20de%20Contenido%20Dark.png)
 
-1. **Extracción Raw:** Ingestamos archivos crudos como PDFs digitales, documentos de texto o páginas HTML directamente desde Cloud Storage hacia una tabla Delta a nivel Bronze. Para automatizar este paso de forma incremental, usamos **Databricks Auto Loader**, que detecta nuevos archivos tan pronto como llegan.
-2. **Filtro de Ruido:** Aplicamos funciones de Spark y expresiones regulares (Regex) para eliminar etiquetas HTML, scripts, números de página y disclaimers legales repetitivos (boilerplate). Si no limpiamos esto, el buscador vectorial puede considerar estos textos comunes como relevantes para consultas legítimas de los usuarios.
-3. **Chunking Inteligente:** Dividimos el texto limpio en fragmentos manejables. El tamaño y el solapamiento (*overlap*) de estos fragmentos se configuran de acuerdo con la ventana de contexto del LLM y la granularidad de la información.
-4. **Generación de Embeddings:** Procesamos cada fragmento a través de un modelo vectorial (como BGE o Ada) utilizando endpoints de **Databricks Model Serving** para obtener sus vectores densos correspondientes.
-5. **Carga en Delta Table:** Guardamos los fragmentos de texto, sus metadatos (URI de origen, identificador de fragmento) y sus vectores en una tabla Delta de nivel Gold regulada por **Unity Catalog**, lista para conectarse al motor de búsqueda.
+* **Extraer los archivos crudos (Raw):** Primero, leemos documentos (PDFs, HTML o texto) desde buckets en la nube. Para automatizar esto de forma incremental y eficiente, lo ideal es usar **Databricks Auto Loader**, que detecta nuevos archivos conforme van llegando a la ruta.
+* **Limpiar el ruido:** Mediante funciones nativas de Spark y expresiones regulares, eliminamos código de marcado, disclaimers legales repetitivos (boilerplate) y números de página. Si no quitamos este contenido vacío, el buscador vectorial empezará a recuperar estos textos genéricos para cualquier consulta.
+* **Fragmentación inteligente:** El texto limpio se corta en trozos (*chunks*). Ajustar el tamaño y el solapamiento (*overlap*) de estos bloques depende del límite del LLM que vayamos a usar.
+* **Vectorizar (Embeddings):** Pasamos cada fragmento por un modelo de embeddings usando endpoints de **Databricks Model Serving** para generar los vectores.
+* **Escribir en Delta Lake:** Guardamos los fragmentos de texto limpitos, sus embeddings y metadatos clave (como la URI del archivo origen) en una tabla Delta de nivel Gold regulada por **Unity Catalog**.
 
 ---
 
-## 2. Estrategias de Fragmentación (Chunking)
+## 2. Estrategias de fragmentación (Chunking)
 
-El *chunking* consiste en dividir un texto largo en fragmentos más pequeños. La elección de la estrategia de fragmentación determina el balance entre la precisión de la búsqueda semántica y la preservación del contexto de la información.
+El *chunking* es el arte de dividir textos largos en fragmentos que el modelo pueda digerir. Esta decisión define directamente el balance entre velocidad de búsqueda y la retención del contexto original.
 
-El examen de certificación evalúa cuándo y cómo aplicar cada estrategia según la estructura de los datos:
+El examen de Databricks evalúa nuestra capacidad para elegir el método correcto según cómo estén organizados los datos:
 
 ![Estrategias de Fragmentación](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/figura_1_estrategias_chunking.png)
 
 ### A. Fragmentación de Longitud Fija (Fixed-Length)
-Divide el texto basándose en un número estricto de caracteres o tokens (por ejemplo, bloques de 200 tokens). 
-* **Caso de uso:** Logs de sistemas, código fuente o datos altamente homogéneos.
-* **Ventajas:** Es el método más rápido y sencillo de implementar.
-* **Desventajas:** Ignora la estructura del lenguaje humano. Corta palabras u oraciones por la mitad (como se ve en el ejemplo: `"des ➔ arrollador"`), destruyendo el sentido semántico en los límites del fragmento.
+Se corta el texto a partir de un conteo rígido de caracteres o tokens (por ejemplo, bloques exactos de 200 tokens).
+* **Cuándo usarla:** Para logs de sistemas, archivos CSV estructurados o código de programación.
+* **Ventajas:** Procesamiento inmediato y desarrollo muy simple.
+* **Desventajas:** Rompe las oraciones de forma arbitraria. Puede cortar palabras clave por la mitad (como pasar de `"desarrollador"` a `"des ➔ arrollador"`), arruinando el significado en los límites del bloque.
 
 ### B. Fragmentación a Nivel de Oración (Sentence-Level)
-Utiliza librerías de procesamiento de lenguaje natural (NLP) para identificar signos de puntuación y dividir el texto respetando los límites lógicos de cada oración.
-* **Caso de uso:** Preguntas frecuentes (FAQs), artículos cortos de noticias o glosarios donde cada línea representa una idea completa.
-* **Ventajas:** Preserva la coherencia sintáctica gramatical.
-* **Desventajas:** Si las oraciones consecutivas dependen fuertemente entre sí, se pierde la relación del contexto general al separarlas.
+Usa herramientas de procesamiento de lenguaje natural (como spaCy o NLTK) para encontrar los puntos finales y cortar solo donde termina una frase.
+* **Cuándo usarla:** Glosarios, bases de preguntas frecuentes (FAQs) o textos muy directos.
+* **Ventajas:** La sintaxis se mantiene limpia y las oraciones no quedan truncadas.
+* **Desventajas:** Al aislar oraciones individuales, a veces se pierde el hilo conductor del párrafo si hay referencias cruzadas ("él", "esto").
 
 ### C. Fragmentación Basada en Párrafos (Paragraph-Based)
-Utiliza los saltos de línea dobles (`\n\n`) como límites naturales para dividir el contenido.
-* **Caso de uso:** Reportes de negocio, artículos de blog o contratos legales estructurados.
-* **Ventajas:** Mantiene unido el contexto temático redactado por el autor.
-* **Desventajas:** La longitud de los párrafos suele ser muy inconsistente, produciendo fragmentos demasiado grandes o demasiado pequeños.
+Usa los saltos de línea dobles (`\n\n`) como el punto de división natural.
+* **Cuándo usarla:** Contratos, informes financieros de texto largo o artículos estructurados.
+* **Ventajas:** Mantiene el contexto original que el autor organizó al escribir.
+* **Desventajas:** La extensión de los párrafos humanos varía demasiado. Nos arriesgamos a tener fragmentos gigantescos e inconsistentes.
 
 ### D. Fragmentación por Ventana Deslizante (Sliding Window)
-Divide el texto en bloques de tamaño fijo pero repite de forma deliberada un porcentaje de tokens del fragmento anterior en el nuevo (solapamiento o *overlap*). Por ejemplo, chunks de 300 tokens con 50 tokens de solapamiento.
-* **Caso de uso:** Documentos técnicos complejos, manuales de ingeniería o libros de texto.
-* **Ventajas:** Evita la pérdida de contexto en los cortes de los fragmentos al mantener términos clave repetidos en los bordes.
-* **Desventajas:** Incrementa el volumen total de datos indexados y los costos de almacenamiento.
+Crea fragmentos de tamaño fijo pero repitiendo una porción de tokens del bloque anterior en el nuevo (solapamiento o *overlap*). Por ejemplo, un bloque de 300 tokens que arrastra 50 tokens del fragmento previo.
+* **Cuándo usarla:** Manuales técnicos complejos, documentos legales con cláusulas extensas o libros.
+* **Ventajas:** Excelente para no perder la continuidad de las ideas en los puntos de corte.
+* **Desventajas:** Al duplicar información, incrementa el tamaño de la base de datos vectorial y, por ende, los costos.
 
 ### E. Fragmentación Semántica (Semantic Chunking)
-Es la estrategia más avanzada. Utiliza un modelo de embeddings para calcular la similitud semántica entre oraciones consecutivas. Cuando la similitud cae por debajo de cierto umbral, el algoritmo asume un cambio de tema y genera un corte.
-* **Caso de uso:** Transcripciones de llamadas de soporte, actas de reuniones largas o flujos de texto sin formato visual.
-* **Ventajas:** Las divisiones son adaptativas y corresponden al contenido real de la conversación.
-* **Desventajas:** Requiere un alto costo de cómputo y latencia porque evalúa embeddings para cada oración antes de la ingesta.
+El enfoque más sofisticado. Calcula la similitud vectorial entre oraciones consecutivas. En el momento en que la similitud cae por debajo de un umbral que definamos, el sistema asume un cambio de tema y genera la división.
+* **Cuándo usarla:** Actas de reuniones, transcripciones de audio o textos continuos sin subtítulos.
+* **Ventajas:** Los cortes son completamente adaptativos e inteligentes.
+* **Desventajas:** Requiere muchísima potencia de cómputo, ya que hay que generar embeddings de prueba para cada oración antes de hacer los cortes definitivos.
 
-### Matriz de Decisiones de Fragmentación
+### Matriz de decisiones de fragmentación
 
-Para entender mejor estas estrategias desde el punto de vista del diseño de sistemas, podemos organizarlas según su **Complejidad de Implementación** y su **Criterio de Corte**:
+Para que te quede más claro cómo elegir en el mundo real, organigrama de opciones según su **Complejidad de Implementación** y su **Criterio de Corte**:
 
 ![Matriz de Fragmentación RAG Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Matriz%20de%20Fragmentaci%C3%B3n%20RAG%20Dark.png)
 
 ---
 
-## 3. Control de Granularidad y Overlap
+## 3. Control de granularidad y solapamiento
 
-Ajustar el tamaño de los fragmentos (granularidad) y el solapamiento (overlap) es un balance crítico en la arquitectura RAG:
+Ajustar el tamaño de los fragmentos y su solapamiento es un juego de equilibrios en RAG:
 
-### Tamaño del Chunk (Granularidad)
-* **Chunks Pequeños (100 - 200 tokens):** Excelente precisión semántica al indexar ideas muy específicas. Sin embargo, carecen de contexto de fondo y obligan a la base de datos a gestionar más vectores, elevando el costo de búsqueda.
-* **Chunks Grandes (500 - 800 tokens):** Ofrecen un contexto muy rico para que el LLM redacte respuestas matizadas. Sin embargo, diluyen los temas específicos, haciendo que la búsqueda por vectores sea menos precisa.
+### El tamaño del fragmento (Granularidad)
+* **Chunks Pequeños (100 - 200 tokens):** Encuentran datos específicos muy rápido y con alta precisión. ¿El problema? Tienen poca cobertura de contexto y nos obligan a gestionar millones de vectores, lo que puede ralentizar la consulta.
+* **Chunks Grandes (500 - 800 tokens):** Le dan al LLM información de fondo muy rica para que redacte su respuesta. La desventaja es que los temas clave se diluyen, bajando la precisión de la búsqueda vectorial pura.
 
-### Overlap (Fijo vs. Dinámico)
-* **Overlap Fijo:** Copia un número estático de tokens (ej. 10% del tamaño del bloque). Es la opción más común por su simplicidad.
-* **Overlap Dinámico:** El algoritmo ajusta dinámicamente los bordes. Si el corte fijo cae a mitad de una frase, el sistema extiende el overlap automáticamente hasta alcanzar el punto final o salto de párrafo para evitar enviar información cortada.
+### El solapamiento (Overlap)
+* **Overlap Fijo:** Repite un porcentaje estático (típicamente entre 10% y 20% del bloque). Es la opción más popular porque funciona sin complicaciones.
+* **Overlap Dinámico:** El algoritmo es inteligente; si el corte cae a la mitad de una oración, extiende el bloque automáticamente hasta encontrar un punto o un fin de párrafo.
 
 ---
 
-## 4. Ingesta y Almacenamiento en Delta Lake (Unity Catalog)
+## 4. Almacenamiento y gobernanza en Delta Lake
 
-Una vez estructurados los fragmentos, el estándar de Databricks es procesarlos dentro de la **Arquitectura Medallion** utilizando **Delta Lake** y gobernando todo con **Unity Catalog**:
+Cuando los fragmentos ya están listos, el estándar de Databricks consiste en organizarlos bajo la **Arquitectura Medallion** en **Delta Lake** y controlarlos con **Unity Catalog**:
 
 ![Pipeline de Ingesta Delta](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/figura_2_pipeline_ingesta_delta.png)
 
-### Por qué Delta Lake es la base de RAG en Databricks:
-1. **predicate Pushdown:** Permite filtrar metadatos de forma ultra rápida antes de realizar la búsqueda vectorial (por ejemplo, buscar solo chunks que tengan el metadato `departamento = 'Recursos Humanos'`).
-2. **Actualizaciones Incrementales:** Permite modificar o eliminar fragmentos de un documento específico sin reconstruir toda la base de datos vectorial de la empresa.
-3. **Time Travel:** Mantiene versiones históricas de los datos, útil para auditar qué información estaba disponible cuando un modelo generó una respuesta incorrecta.
+### Por qué Delta Lake es la mejor opción para RAG:
+* **predicate Pushdown:** Permite filtrar metadatos de forma ultra rápida antes de hacer la búsqueda por vectores (ej. consultar únicamente chunks donde `departamento = 'HR'`).
+* **Actualizaciones Incrementales:** Si un manual se actualiza, modificas solo sus fragmentos sin tener que reprocesar o reescribir todo el corpus de la empresa.
+* **Viaje en el Tiempo (Time Travel):** Guarda el histórico de cambios, lo que ayuda a auditar qué datos estaban cargados si el modelo alucina o comete un error en producción.
 
-### Gobernanza con Unity Catalog
-Unity Catalog gestiona el control de acceso basado en roles (RBAC) y registra el linaje de los datos (lineage). Esto garantiza que el pipeline RAG respete los permisos de los archivos originales: si un usuario de ventas no tiene permiso para leer el manual financiero en Unity Catalog, el buscador vectorial no recuperará fragmentos de ese manual para sus consultas.
+### Seguridad y permisos con Unity Catalog
+Unity Catalog gestiona el control de accesos basado en roles (RBAC) y la trazabilidad del dato (lineage). Esto garantiza que el motor de búsqueda vectorial respete los permisos del archivo original: si un usuario de ventas no tiene permisos para leer el manual financiero de la empresa en Unity Catalog, el buscador nunca le va a recuperar fragmentos de ese manual.
 
 ---
 
-## 5. Optimización de la Recuperación: Vector Search y Reranking
+## 5. El embudo de búsqueda: Vector Search y Reranking
 
-La búsqueda vectorial tradicional devuelve fragmentos basados en similitud matemática (por ejemplo, distancia coseno entre el vector de la consulta y el del documento). Sin embargo, la búsqueda puramente vectorial sufre de un cuello de botella de relevancia: tiene un alto **Recall** (encuentra rápido los documentos correctos) pero una baja **Precision** (trae también mucho ruido).
+La búsqueda vectorial busca coincidencias matemáticas calculando la distancia coseno de los embeddings. Es excelente para encontrar de todo rápido (alto **Recall**), pero a menudo arrastra demasiado ruido (baja **Precision**).
 
-Para resolver esto de forma eficiente en producción, implementamos un flujo de dos etapas con un **Reranker**:
+Para solucionar este dilema en sistemas de producción, aplicamos un embudo en dos fases usando un **Reranker**:
 
 ![Mejora de la Búsqueda Vectorial con Reranking Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Mejora%20de%20la%20B%C3%BAsqueda%20Vectorial%20con%20Reranking%20Dark.png)
 
-1. **Etapa 1: Búsqueda Vectorial Rápida (Top-100):** Realizamos una consulta ágil usando distancia coseno sobre la base de datos vectorial. Esto nos da un conjunto amplio de 100 candidatos. Es rápido pero puede contener fragmentos irrelevantes que solo comparten palabras clave.
-2. **Etapa 2: Re-ranking Semántico (Top-5):** Enviamos los 100 candidatos a un modelo **Cross-Encoder** (Reranker) que evalúa la relación semántica exacta entre la pregunta del usuario y cada fragmento. Este paso reorganiza la lista y selecciona solo los 5 mejores fragmentos para el prompt final del LLM.
+1. **Primera etapa: Similitud Vectorial Rápida (Top-100):** Hacemos una consulta rápida por distancia coseno en la base de datos vectorial para quedarnos con 100 candidatos. Es veloz pero imprecisa.
+2. **Segunda etapa: Re-ranking Semántico (Top-5):** Enviamos los 100 fragmentos candidatos a un modelo **Cross-Encoder** (el Reranker), que calcula la relación semántica exacta entre la pregunta del usuario y cada fragmento. De ahí, extrae los 5 mejores para introducirlos en el prompt.
 
-Este enfoque de embudo optimiza el espacio de la ventana de contexto del LLM y reduce las alucinaciones al eliminar el ruido del prompt, como se muestra en la siguiente infografía:
+Este flujo de embudo optimiza el espacio de contexto del LLM y disminuye los errores y costos, tal como ilustra este diagrama de métricas:
 
 ![Precision y Recall RAG Funnel](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/figura_3_precision_recall_rag.png)
 
 ---
 
-## 6. Implementación Práctica en Python y PySpark
+## 6. Pipeline práctico en PySpark
 
-A continuación, implementamos el pipeline completo de ingesta RAG en Databricks. El código limpia el texto de un manual crudo mediante expresiones regulares, aplica una fragmentación por ventana deslizante y escribe el resultado en una tabla Delta gobernada por Unity Catalog:
+Este script simula el proceso completo en Databricks: toma un texto con marcado HTML y boilerplate, lo limpia usando expresiones regulares, genera fragmentos por ventana deslizante y los escribe en Delta Lake de forma segura:
 
 ```python
 import re
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit
 
-# 1. Limpieza de ruido semántico y boilerplate
+# 1. Limpieza de ruido y marcado residual
 def clean_document_text(raw_text):
-    # Remover etiquetas HTML/XML
+    # Eliminar etiquetas HTML/XML
     text = re.sub(r'<[^>]+>', '', raw_text)
     # Quitar marcas de confidencialidad y disclaimers repetitivos
     text = re.sub(r'Confidencial - Propiedad de la Empresa.*', '', text, flags=re.IGNORECASE)
-    # Normalizar espacios en blanco
+    # Normalizar espacios múltiples en blanco
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-# 2. Fragmentación por ventana deslizante (Sliding Window)
+# 2. Generador de fragmentos por ventana deslizante
 def make_sliding_chunks(text, chunk_size=200, overlap=40):
     words = text.split(" ")
     chunks = []
@@ -155,10 +155,10 @@ def make_sliding_chunks(text, chunk_size=200, overlap=40):
             chunks.append(" ".join(chunk_words))
     return chunks
 
-# 3. Inicialización del pipeline en Spark
+# 3. Inicializar sesión de Spark
 spark = SparkSession.builder.getOrCreate()
 
-# Documento de prueba con código de marcado y boilerplate
+# Documento de prueba sucio
 documento_sucio = """
 <html><body>
 <h1>Guía de Configuración Interna</h1>
@@ -167,11 +167,11 @@ documento_sucio = """
 </body></html>
 """
 
-# Procesar y limpiar datos
+# Procesamiento de los datos
 documento_limpio = clean_document_text(documento_sucio)
 mis_chunks = make_sliding_chunks(documento_limpio, chunk_size=10, overlap=3)
 
-# Estructurar datos con metadatos para Unity Catalog (Nivel Gold)
+# Crear DataFrame con metadatos estructurados para Unity Catalog (Nivel Gold)
 data = [(i, "doc_employee_01", chunk) for i, chunk in enumerate(mis_chunks)]
 columns = ["chunk_index", "document_id", "content"]
 
@@ -179,14 +179,14 @@ df = spark.createDataFrame(data, columns) \
     .withColumn("source_uri", lit("dbfs:/mnt/documentos/guia.pdf")) \
     .withColumn("updated_at", current_timestamp())
 
-# Escritura segura en Delta Lake
-# Reemplaza 'catalog_name' y 'schema_name' por tus configuraciones de Unity Catalog
+# Escritura en Delta Lake de manera transaccional
+# Asegúrate de reemplazar 'catalog_name' y 'schema_name' por los tuyos en producción
 df.write.format("delta") \
     .mode("overwrite") \
     .option("overwriteSchema", "true") \
     .saveAsTable("catalog_name.schema_name.rag_gold_chunks")
 
-print("¡Pipeline completado! Fragmentos limpios indexados en Delta Lake de forma exitosa.")
+print("¡Pipeline completado! Fragmentos guardados en Delta Lake de forma exitosa.")
 ```
 
 Este flujo automatizado garantiza que cada fragmento guardado esté libre de ruido y estructurado con sus respectivos metadatos, estableciendo la base para búsquedas vectoriales rápidas y precisas en cualquier arquitectura RAG corporativa.
