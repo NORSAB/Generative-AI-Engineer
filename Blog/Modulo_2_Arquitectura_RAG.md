@@ -64,7 +64,7 @@ Crea fragmentos de tamaño fijo pero repitiendo una porción de tokens del bloqu
 * **Desventajas:** Al duplicar información, incrementa el tamaño de la base de datos vectorial y, por ende, los costos.
 
 ### E. Fragmentación Semántica (Semantic Chunking)
-El enfoque más sofisticado. Calcula la similitud vectorial entre oraciones consecutivas. En el momento en que la similitud cae por debajo de un umbral que definamos, el sistema asume un cambio de tema y genera la división.
+El enfoque más sofisticado. Calcula la similitud vectorial entre oraciones consecutivas. En el momento en que la instrución o similitud cae por debajo de un umbral que definamos, el sistema asume un cambio de tema y genera la división.
 * **Cuándo usarla:** Actas de reuniones, transcripciones de audio o textos continuos sin subtítulos.
 * **Ventajas:** Los cortes son completamente adaptativos e inteligentes.
 * **Desventajas:** Requiere muchísima potencia de cómputo, ya que hay que generar embeddings de prueba para cada oración antes de hacer los cortes definitivos.
@@ -89,6 +89,10 @@ Ajustar el tamaño de los fragmentos y su solapamiento es un juego de equilibrio
 * **Overlap Fijo:** Repite un porcentaje estático (típicamente entre 10% y 20% del bloque). Es la opción más popular porque funciona sin complicaciones.
 * **Overlap Dinámico:** El algoritmo es inteligente; si el corte cae a la mitad de una oración, extiende el bloque automáticamente hasta encontrar un punto o un fin de párrafo.
 
+### El reto del parseo consciente del diseño (Layout-Aware Parsing)
+Los extractores de texto básicos leen de izquierda a derecha. Si un PDF tiene dos columnas de texto, un parseador simple mezclará las líneas de ambas columnas, haciendo que el fragmento final sea ilegible.
+Para solucionar esto, la certificación evalúa el uso de herramientas capaces de identificar la estructura visual (títulos, tablas, imágenes y columnas). Al procesar tablas, por ejemplo, el sistema debe convertirlas a formatos estructurados como HTML o Markdown dentro del chunk de texto, permitiendo que el modelo de embeddings entienda las relaciones de las celdas y filas.
+
 ---
 
 ## 4. Arquitectura Medallion y Gobernanza en Delta Lake
@@ -100,6 +104,10 @@ El almacenamiento de datos en la plataforma de Databricks sigue la estructura Me
 1. **Tabla Bronze (Crudo/Raw):** Ingesta inicial de los archivos mediante **Auto Loader** (usando `format("cloudFiles")` y `cloudFiles.format("binaryFile")`). Aquí guardamos los archivos PDF o binarios tal como vienen de la nube, con su nombre, tamaño y fecha.
 2. **Tabla Silver (Limpio):** Almacena el texto extraído y normalizado. Se aplican herramientas de OCR (como Tesseract en MLflow) o librerías de parseo (como PyMuPDF) para eliminar el código HTML y las marcas vacías.
 3. **Tabla Gold (Indexado RAG):** Contiene los fragmentos finales divididos en chunks, sus embeddings vectoriales y todos los metadatos de búsqueda estructurados (URI original, autor, permisos).
+
+### Ingesta incremental con Spark Structured Streaming
+En producción, el pipeline RAG se ejecuta como un flujo de transmisión continua (Structured Streaming) para procesar nuevos documentos en tiempo real. 
+En lugar de mantener clústeres encendidos las 24 horas, Databricks permite configurar el streaming con el disparador **`.trigger(availableNow=True)`**. Esto procesa únicamente los nuevos archivos que han llegado desde la última ejecución en forma de micro-lotes y apaga el clúster automáticamente al terminar, optimizando drásticamente los costos.
 
 ### ¿Por qué Delta Lake es crítico en RAG?
 * **predicate Pushdown (Filtros rápidos):** Permite filtrar los metadatos de la tabla Gold de forma veloz antes de hacer la búsqueda por vectores. Si buscas solo manuales del año 2026, Spark descarta el resto en la tabla Delta antes de comparar embeddings.
@@ -121,8 +129,15 @@ En el examen te evaluarán cuándo utilizar cada métrica en Databricks Vector S
 
 ### Sincronización del Índice de Vector Search
 En Databricks, puedes crear dos tipos de índices vectoriales según la arquitectura del sistema:
-* **Delta Sync Index (Administrado):** Se conecta a tu tabla Delta Gold en Unity Catalog. Databricks se encarga de sincronizar y calcular los embeddings de forma automática cada vez que la tabla Delta Gold recibe nuevos registros, garantizando una actualización incremental transparente.
+* **Delta Sync Index (Administrado):** Se conecta a tu tabla Delta Gold en Unity Catalog. Databricks permite configurar este índice en dos modalidades de embeddings:
+  1. **Managed Embeddings (Administrados):** Databricks calcula los embeddings de forma automática llamando a un endpoint de Model Serving (como BGE) cada vez que ingresa texto a la tabla Delta Gold.
+  2. **Self-Managed Embeddings (Autoadministrados):** Tú calculas los vectores en tu pipeline de Spark y los guardas en una columna de la tabla Delta. El índice solo se encarga de sincronizarlos de forma incremental.
 * **Direct Vector Access Index (No administrado):** No está enlazado a una tabla Delta. El desarrollador debe calcular los embeddings manualmente en su código y subirlos al índice mediante la API.
+
+### Manejo de borrados en la indexación (Hard vs. Soft Deletes)
+Es crucial saber cómo se propagan las eliminaciones de documentos al índice vectorial:
+* **Hard Delete:** Si eliminas físicamente una fila de la tabla Delta Gold (`DELETE FROM`), la sincronización de Vector Search eliminará de inmediato ese vector del índice.
+* **Soft Delete:** Si marcas un documento como inactivo (ej. `activo = false`), el vector permanecerá en el índice. En este caso, debes filtrar explícitamente usando la columna de estado en la consulta del buscador vectorial.
 
 ### Reranking: Resolviendo el dilema de Precision vs. Recall
 La búsqueda vectorial es excelente encontrando información relevante rápidamente (alto **Recall**), pero suele mezclar ruido irrelevante (baja **Precision**). Pasar 100 fragmentos crudos al prompt satura la ventana de contexto y confunde al LLM.
@@ -140,17 +155,20 @@ Este embudo optimiza el prompt, ahorra costos de tokens y reduce drásticamente 
 
 ---
 
-## 6. Pipeline práctico en PySpark
+## 6. Pipeline práctico en PySpark (Structured Streaming)
 
-Este script simula el proceso completo en Databricks: toma un texto con marcado HTML y boilerplate, lo limpia usando expresiones regulares, genera fragmentos por ventana deslizante y los escribe en Delta Lake de forma segura:
+Este script de producción en Databricks implementa el pipeline de ingesta incremental utilizando Auto Loader y Structured Streaming. Lee nuevos documentos en tiempo real, los limpia, genera fragmentos por ventana deslizante y escribe los resultados en Delta de forma incremental con el disparador `availableNow`:
 
 ```python
 import re
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import current_timestamp, lit
+from pyspark.sql.functions import current_timestamp, lit, udf
+from pyspark.sql.types import StringType, ArrayType
 
 # 1. Limpieza de ruido y marcado residual
 def clean_document_text(raw_text):
+    if not raw_text:
+        return ""
     # Eliminar etiquetas HTML/XML
     text = re.sub(r'<[^>]+>', '', raw_text)
     # Quitar marcas de confidencialidad y disclaimers repetitivos
@@ -161,6 +179,8 @@ def clean_document_text(raw_text):
 
 # 2. Generador de fragmentos por ventana deslizante
 def make_sliding_chunks(text, chunk_size=200, overlap=40):
+    if not text:
+        return []
     words = text.split(" ")
     chunks = []
     stride = chunk_size - overlap
@@ -171,38 +191,40 @@ def make_sliding_chunks(text, chunk_size=200, overlap=40):
             chunks.append(" ".join(chunk_words))
     return chunks
 
+# Registrar funciones UDF para procesamiento en Spark
+clean_text_udf = udf(clean_document_text, StringType())
+chunk_text_udf = udf(lambda t: make_sliding_chunks(t, 100, 20), ArrayType(StringType()))
+
 # 3. Inicializar sesión de Spark
 spark = SparkSession.builder.getOrCreate()
 
-# Documento de prueba sucio
-documento_sucio = """
-<html><body>
-<h1>Guía de Configuración Interna</h1>
-<p>Para configurar la VPN del negocio, primero debe descargar la aplicación Cisco AnyConnect.</p>
-<p>Confidencial - Propiedad de la Empresa. Prohibida su reproducción.</p>
-</body></html>
-"""
+# Ruta de entrada de documentos crudos en Cloud Storage (Bronze)
+source_directory = "/mnt/documentos/incoming_raw/"
+checkpoint_directory = "/mnt/documentos/checkpoints/ingesta_rag"
 
-# Procesamiento de los datos
-documento_limpio = clean_document_text(documento_sucio)
-mis_chunks = make_sliding_chunks(documento_limpio, chunk_size=10, overlap=3)
+# Lectura incremental usando Auto Loader
+raw_stream_df = spark.readStream \
+    .format("cloudFiles") \
+    .option("cloudFiles.format", "text") \
+    .load(source_directory)
 
-# Crear DataFrame con metadatos estructurados para Unity Catalog (Nivel Gold)
-data = [(i, "doc_employee_01", chunk) for i, chunk in enumerate(mis_chunks)]
-columns = ["chunk_index", "document_id", "content"]
-
-df = spark.createDataFrame(data, columns) \
-    .withColumn("source_uri", lit("dbfs:/mnt/documentos/guia.pdf")) \
+# Aplicar pipeline de limpieza y chunking
+processed_df = raw_stream_df \
+    .withColumn("clean_content", clean_text_udf("value")) \
+    .withColumn("chunks", chunk_text_udf("clean_content")) \
+    .selectExpr("input_file_name() as source_uri", "explode(chunks) as content") \
     .withColumn("updated_at", current_timestamp())
 
-# Escritura en Delta Lake de manera transaccional
-# Asegúrate de reemplazar 'catalog_name' y 'schema_name' por los tuyos en producción
-df.write.format("delta") \
-    .mode("overwrite") \
-    .option("overwriteSchema", "true") \
-    .saveAsTable("catalog_name.schema_name.rag_gold_chunks")
+# Escritura incremental segura con trigger AvailableNow (Gold)
+query = processed_df.writeStream \
+    .format("delta") \
+    .outputMode("append") \
+    .option("checkpointLocation", checkpoint_directory) \
+    .trigger(availableNow=True) \
+    .toTable("catalog_name.schema_name.rag_gold_chunks")
 
-print("¡Pipeline completado! Fragmentos guardados en Delta Lake de forma exitosa.")
+query.awaitTermination()
+print("¡Pipeline Structured Streaming completado e indexado de forma incremental!")
 ```
 
 Este flujo automatizado garantiza que cada fragmento guardado esté libre de ruido y estructurado con sus respectivos metadatos, estableciendo la base para búsquedas vectoriales rápidas y precisas en cualquier arquitectura RAG corporativa.
