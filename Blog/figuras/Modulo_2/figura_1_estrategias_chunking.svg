@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1360" width="2000" height="1360">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&amp;family=Inter:wght@300;400;600;700&amp;display=swap');
+      .main-title { font-family: 'Outfit', sans-serif; font-weight: 800; fill: #FFFFFF; font-size: 60px; }
+      .section-title { font-family: 'Outfit', sans-serif; font-weight: 600; fill: #2DD4BF; font-size: 38px; }
+      .text-label { font-family: 'Inter', sans-serif; font-weight: 600; fill: #FFFFFF; font-size: 26px; }
+      .text-desc { font-family: 'Inter', sans-serif; font-weight: 400; fill: #94A3B8; font-size: 26px; }
+      .code-font { font-family: 'Courier New', Courier, monospace; font-size: 26px; fill: #F8FAFC; font-weight: bold; }
+      .badge-text { font-family: 'Inter', sans-serif; font-weight: 700; fill: #FFFFFF; font-size: 22px; text-transform: uppercase; }
+    </style>
+
+    <!-- 8 Colores Oficiales Coherentes -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070A13" />       <!-- 1. Fondo base muy oscuro -->
+      <stop offset="100%" stop-color="#0F172A" />      <!-- 2. Fondo intermedio slate/navy -->
+    </linearGradient>
+    <linearGradient id="purple-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />       <!-- 3. Morado brillante -->
+      <stop offset="100%" stop-color="#7C3AED" />     <!-- 4. Morado profundo -->
+    </linearGradient>
+    <linearGradient id="teal-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />       <!-- 5. Teal brillante -->
+      <stop offset="100%" stop-color="#0D9488" />     <!-- 6. Teal apagado/médium -->
+    </linearGradient>
+    
+    <!-- Colores de Soporte e Interfaces -->
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />       <!-- 7. Gris tarjeta superior -->
+      <stop offset="100%" stop-color="#0F172A" />      <!-- 8. Gris tarjeta fondo -->
+    </linearGradient>
+
+    <!-- Sombra -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Fondo (Sin esquinas redondeadas para evitar bordes blancos) -->
+  <rect width="2000" height="1360" fill="url(#bg-grad)" />
+
+  <!-- Título Superior -->
+  <text x="90" y="110" class="main-title">Estrategias de Fragmentación de Documentos (Chunking)</text>
+  <text x="90" y="160" class="text-desc">Análisis comparativo de métodos de división para optimizar la relevancia en sistemas RAG.</text>
+
+  <!-- ================= TEXTO ORIGINAL ================= -->
+  <g transform="translate(90, 220)" filter="url(#shadow)">
+    <rect width="1820" height="170" rx="16" fill="#131B2E" stroke="#334155" stroke-width="3" />
+    <text x="50" y="50" class="section-title">Texto Fuente Completo (Original)</text>
+    <rect x="50" y="76" width="1720" height="64" rx="8" fill="#070A13" />
+    <text x="910" y="116" class="code-font" text-anchor="middle" font-size="23px">"Para optimizar un join de Spark en Delta Lake, el desarrollador verifica los archivos..."</text>
+  </g>
+
+  <!-- ================= ESTRATEGIA A: FIXED-LENGTH ================= -->
+  <g transform="translate(90, 440)" filter="url(#shadow)">
+    <rect width="890" height="440" rx="16" fill="#131B2E" stroke="#334155" stroke-width="2" />
+    
+    <text x="50" y="60" class="section-title">A. Longitud Fija (Fixed-Length)</text>
+    <text x="50" y="110" class="text-desc">Divide estrictamente cada N caracteres, dañando palabras.</text>
+    
+    <!-- Caja Chunk 1 -->
+    <rect x="70" y="170" width="320" height="100" rx="12" fill="url(#purple-primary)" />
+    <text x="230" y="230" class="code-font" text-anchor="middle">"Para optimiz"</text>
+    <rect x="195" y="154" width="70" height="32" rx="16" fill="#070A13" stroke="#C084FC" stroke-width="2" />
+    <text x="230" y="176" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 1</text>
+
+    <!-- Conector de Corte Limpio -->
+    <g transform="translate(400, 200)">
+      <line x1="0" y1="20" x2="60" y2="20" stroke="#7C3AED" stroke-width="4" stroke-dasharray="6 4" />
+      <circle cx="30" cy="20" r="8" fill="#C084FC" />
+    </g>
+
+    <!-- Caja Chunk 2 -->
+    <rect x="470" y="170" width="320" height="100" rx="12" fill="url(#purple-primary)" />
+    <text x="630" y="230" class="code-font" text-anchor="middle">"ar un join d"</text>
+    <rect x="595" y="154" width="70" height="32" rx="16" fill="#070A13" stroke="#C084FC" stroke-width="2" />
+    <text x="630" y="176" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 2</text>
+
+    <!-- Muted Error Note -->
+    <rect x="50" y="310" width="790" height="70" rx="8" fill="#1A1F2C" stroke="#7C3AED" stroke-width="2" />
+    <text x="70" y="352" font-family="'Inter', sans-serif" font-size="22px" font-weight="600" fill="#E2E8F0">Nota: Error semántico. Corta el término "join" en "jo" / "in".</text>
+  </g>
+
+  <!-- ================= ESTRATEGIA B: SLIDING WINDOW ================= -->
+  <g transform="translate(1020, 440)" filter="url(#shadow)">
+    <rect width="890" height="440" rx="16" fill="#131B2E" stroke="#334155" stroke-width="2" />
+    
+    <text x="50" y="60" class="section-title">B. Ventana Deslizante (Overlap)</text>
+    <text x="50" y="104" class="text-desc">Mantiene un solapamiento (overlap)</text>
+    <text x="50" y="140" class="text-desc">para resguardar la continuidad.</text>
+
+    <!-- Chunk 1 -->
+    <g transform="translate(50, 190)">
+      <rect width="400" height="80" rx="12" fill="#1E293B" stroke="#4F46E5" stroke-width="3" />
+      <text x="200" y="48" class="code-font" text-anchor="middle">"join de Spark en Delta"</text>
+      <rect x="165" y="-16" width="70" height="32" rx="16" fill="#070A13" stroke="#818CF8" stroke-width="2" />
+      <text x="200" y="6" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 1</text>
+    </g>
+
+    <!-- Chunk 2 -->
+    <g transform="translate(320, 300)">
+      <rect width="520" height="80" rx="12" fill="#1E293B" stroke="#4F46E5" stroke-width="3" />
+      <text x="260" y="48" class="code-font" text-anchor="middle">"Spark en Delta Lake, el..."</text>
+      
+      <!-- Zona de solape visual indicada en color Teal Muted del tema -->
+      <rect x="0" y="0" width="130" height="80" rx="12" fill="none" stroke="url(#teal-primary)" stroke-width="4" />
+      <rect x="0" y="-28" width="120" height="28" rx="4" fill="#0D9488" />
+      <text x="60" y="-6" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="700" fill="#FFFFFF" font-size="16px">OVERLAP</text>
+      
+      <rect x="300" y="-16" width="70" height="32" rx="16" fill="#070A13" stroke="#818CF8" stroke-width="2" />
+      <text x="335" y="6" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 2</text>
+    </g>
+  </g>
+
+  <!-- ================= ESTRATEGIA C: SEMANTIC CHUNKING ================= -->
+  <g transform="translate(90, 920)" filter="url(#shadow)">
+    <rect width="1820" height="370" rx="16" fill="#131B2E" stroke="#334155" stroke-width="2" />
+    
+    <text x="50" y="60" class="section-title">C. Fragmentación Semántica (Semantic)</text>
+    <text x="50" y="104" class="text-desc">Mide la distancia semántica y divide exactamente en las transiciones de tema.</text>
+
+    <!-- Oración 1 / Chunk 1 -->
+    <g transform="translate(50, 150)">
+      <rect width="700" height="90" rx="12" fill="#070A13" stroke="#8B5CF6" stroke-width="3" />
+      <text x="350" y="52" class="code-font" text-anchor="middle" font-size="22px">"Para optimizar un join de Spark en Delta"</text>
+      <rect x="315" y="-16" width="70" height="32" rx="16" fill="#070A13" stroke="#8B5CF6" stroke-width="2" />
+      <text x="350" y="6" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 1</text>
+    </g>
+
+    <!-- Indicador de Similitud Vectorial Enriquecido (Posición x=780 a x=1040) -->
+    <g transform="translate(780, 150)">
+      <rect width="260" height="90" rx="12" fill="#1E293B" stroke="#475569" stroke-width="2" stroke-dasharray="4 4" />
+      <text x="130" y="36" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="22px">SIMILITUD</text>
+      <text x="130" y="68" class="code-font" fill="#2DD4BF" font-size="24px" text-anchor="middle">Cos = 0.89</text>
+    </g>
+
+    <!-- Oración 2 / Chunk 2 -->
+    <g transform="translate(1070, 150)">
+      <rect width="700" height="90" rx="12" fill="#070A13" stroke="#8B5CF6" stroke-width="3" />
+      <text x="350" y="52" class="code-font" text-anchor="middle" font-size="22px">"el desarrollador valida el archivo."</text>
+      <rect x="315" y="-16" width="70" height="32" rx="16" fill="#070A13" stroke="#8B5CF6" stroke-width="2" />
+      <text x="350" y="6" font-family="'Inter', sans-serif" font-size="18px" fill="#FFFFFF" text-anchor="middle" font-weight="bold">Ch 2</text>
+    </g>
+
+    <!-- Barra de Corte de Salto Semántico -->
+    <g transform="translate(780, 270)">
+      <line x1="0" y1="10" x2="260" y2="10" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" />
+      <rect x="30" y="-12" width="200" height="40" rx="20" fill="#7C3AED" />
+      <text x="130" y="16" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="700" fill="#FFFFFF" font-size="18px">DIVISIÓN TEMA</text>
+    </g>
+
+    <text x="50" y="336" font-family="'Inter', sans-serif" font-size="24px" fill="#94A3B8">Utiliza modelos de embeddings ligeros para calcular la afinidad y asegurar que cada fragmento contenga un tema cohesivo.</text>
+  </g>
+</svg>

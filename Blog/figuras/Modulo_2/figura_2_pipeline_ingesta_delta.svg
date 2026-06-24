@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2040 1240" width="2040" height="1240">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&amp;family=Inter:wght@300;400;600;700&amp;display=swap');
+      .main-title { font-family: 'Outfit', sans-serif; font-weight: 800; fill: #FFFFFF; font-size: 56px; }
+      .step-title { font-family: 'Outfit', sans-serif; font-weight: 600; fill: #2DD4BF; font-size: 32px; }
+      .box-title { font-family: 'Inter', sans-serif; font-weight: 600; fill: #FFFFFF; font-size: 26px; }
+      .text-desc { font-family: 'Inter', sans-serif; font-weight: 400; fill: #94A3B8; font-size: 26px; }
+      .code-font { font-family: 'Courier New', Courier, monospace; font-size: 22px; fill: #E2E8F0; font-weight: bold; }
+      .table-header { font-family: 'Inter', sans-serif; font-weight: 700; fill: #2DD4BF; font-size: 20px; text-transform: uppercase; }
+      .badge-text { font-family: 'Inter', sans-serif; font-weight: 700; fill: #FFFFFF; font-size: 20px; }
+    </style>
+
+    <!-- Gradientes de la Paleta Oficial -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070A13" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#0D9488" />
+    </linearGradient>
+    <linearGradient id="indigo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+
+    <!-- Sombra -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Fondo (Sin esquinas redondeadas) -->
+  <rect width="2040" height="1240" fill="url(#bg-grad)" />
+
+  <!-- Títulos -->
+  <text x="80" y="100" class="main-title">Pipeline de Ingesta, Fragmentación y Delta Lake</text>
+  <text x="80" y="150" class="text-desc">Flujo técnico desde la ingesta de documentos sin estructurar hasta el almacenamiento vectorial gobernado.</text>
+
+  <!-- ================= ETAPA 1: ORÍGENES DE DATOS ================= -->
+  <g transform="translate(90, 240)" filter="url(#shadow)">
+    <rect width="330" height="860" rx="16" fill="#131B2E" stroke="#334155" stroke-width="3" />
+    <text x="30" y="60" class="step-title">1. Documentos</text>
+    
+    <!-- Icono PDF -->
+    <g transform="translate(20, 110)">
+      <rect width="290" height="190" rx="12" fill="#070A13" stroke="#7C3AED" stroke-width="3" />
+      <rect x="20" y="20" width="70" height="36" rx="6" fill="#4F46E5" />
+      <text x="34" y="45" class="badge-text">PDF</text>
+      <text x="20" y="96" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="22px">Contratos/Memos</text>
+      <text x="20" y="136" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Estructura limpia</text>
+    </g>
+
+    <!-- Icono HTML -->
+    <g transform="translate(20, 350)">
+      <rect width="290" height="190" rx="12" fill="#070A13" stroke="#7C3AED" stroke-width="3" />
+      <rect x="20" y="20" width="90" height="36" rx="6" fill="#6366F1" />
+      <text x="34" y="45" class="badge-text">HTML</text>
+      <text x="20" y="96" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="22px">Sitio de Soporte</text>
+      <text x="20" y="136" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Con tags de ruido</text>
+    </g>
+
+    <!-- Icono PNG -->
+    <g transform="translate(20, 590)">
+      <rect width="290" height="190" rx="12" fill="#070A13" stroke="#2DD4BF" stroke-width="3" />
+      <rect x="20" y="20" width="100" height="36" rx="6" fill="#0D9488" />
+      <text x="30" y="45" class="badge-text">IMAGE</text>
+      <text x="20" y="96" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="22px">Escaneo TIF/PNG</text>
+      <text x="20" y="136" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Requiere OCR</text>
+    </g>
+  </g>
+
+  <!-- Flechas de interconexión 1 a 2 -->
+  <g transform="translate(420, 620)">
+    <line x1="0" y1="0" x2="90" y2="0" stroke="#475569" stroke-width="4" />
+    <polygon points="75,-10 95,0 75,10" fill="#475569" />
+  </g>
+
+  <!-- ================= ETAPA 2: EXTRACCIÓN Y LIMPIEZA ================= -->
+  <g transform="translate(510, 240)" filter="url(#shadow)">
+    <rect width="330" height="860" rx="16" fill="#131B2E" stroke="#334155" stroke-width="3" />
+    <text x="30" y="60" class="step-title">2. Sanitización</text>
+    
+    <!-- Bloque Filtro Regex -->
+    <g transform="translate(20, 110)">
+      <rect width="290" height="300" rx="12" fill="url(#purple-grad)" />
+      <text x="30" y="50" class="box-title">Remoción de Ruido</text>
+      <line x1="30" y1="70" x2="260" y2="70" stroke="#A78BFA" stroke-width="2" />
+      <text x="25" y="110" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="19px" font-weight="600">✓ Filtro HTML/XML</text>
+      <text x="25" y="156" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="19px" font-weight="600">✓ Quitar disclaimers</text>
+      <text x="25" y="202" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="19px" font-weight="600">✓ Quitar pág/footers</text>
+      <text x="25" y="248" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="19px" font-weight="600">✓ Sanitizar Regex</text>
+    </g>
+
+    <!-- Bloque Texto Limpio -->
+    <g transform="translate(20, 450)">
+      <rect width="290" height="330" rx="12" fill="#070A13" stroke="#8B5CF6" stroke-width="2" />
+      <text x="25" y="50" class="box-title" fill="#A78BFA">Texto Plano Limpio</text>
+      <line x1="25" y1="70" x2="265" y2="70" stroke="#334155" stroke-width="2" />
+      
+      <!-- Textos de código en Inter 18px para evitar cualquier desborde -->
+      <text x="25" y="116" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"Para optimizar"</text>
+      <text x="25" y="166" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"el join Spark"</text>
+      <text x="25" y="216" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"en Delta Lake"</text>
+      <text x="25" y="266" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"validar files"</text>
+    </g>
+  </g>
+
+  <!-- Flechas de interconexión 2 a 3 -->
+  <g transform="translate(840, 620)">
+    <line x1="0" y1="0" x2="90" y2="0" stroke="#475569" stroke-width="4" />
+    <polygon points="75,-10 95,0 75,10" fill="#475569" />
+  </g>
+
+  <!-- ================= ETAPA 3: FRAGMENTADOR ================= -->
+  <g transform="translate(930, 240)" filter="url(#shadow)">
+    <rect width="330" height="860" rx="16" fill="#131B2E" stroke="#334155" stroke-width="3" />
+    <text x="30" y="60" class="step-title">3. Fragmentador</text>
+
+    <!-- Caja del Fragmentador -->
+    <g transform="translate(20, 110)">
+      <rect width="290" height="690" rx="12" fill="#070A13" stroke="#2DD4BF" stroke-width="3" />
+      
+      <!-- Chunk 1 -->
+      <rect x="20" y="30" width="250" height="110" rx="8" fill="url(#teal-grad)" />
+      <text x="40" y="66" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="22px" font-weight="700">Chunk 1</text>
+      <text x="40" y="96" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="18px">Tokens 0 - 200</text>
+
+      <!-- Zona de solape visual -->
+      <rect x="20" y="160" width="250" height="40" rx="6" fill="url(#indigo-grad)" stroke="#FFFFFF" stroke-width="2" />
+      <text x="145" y="186" text-anchor="middle" font-family="'Inter', sans-serif" font-weight="700" fill="#FFFFFF" font-size="17px">OVERLAP 40 TOKENS</text>
+
+      <!-- Chunk 2 -->
+      <rect x="20" y="220" width="250" height="110" rx="8" fill="url(#teal-grad)" opacity="0.85" />
+      <text x="40" y="256" font-family="'Inter', sans-serif" fill="#FFFFFF" font-size="22px" font-weight="700">Chunk 2</text>
+      <text x="40" y="286" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="18px">Tokens 160 - 360</text>
+
+      <!-- Caja de Parámetros -->
+      <rect x="20" y="390" width="250" height="240" rx="8" fill="#1E293B" stroke="#334155" stroke-width="2" />
+      <text x="32" y="440" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="20px">Parámetros RAG:</text>
+      <line x1="32" y1="456" x2="238" y2="456" stroke="#334155" stroke-width="2" />
+      
+      <text x="32" y="496" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Size: 200 tkn</text>
+      <text x="32" y="536" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Stride: 160 tkn</text>
+      <text x="32" y="576" font-family="'Inter', sans-serif" fill="#94A3B8" font-size="20px">Overlap: 40 tkn</text>
+    </g>
+  </g>
+
+  <!-- Flechas de interconexión 3 a 4 -->
+  <g transform="translate(1260, 620)">
+    <line x1="0" y1="0" x2="90" y2="0" stroke="#475569" stroke-width="4" />
+    <polygon points="75,-10 95,0 75,10" fill="#475569" />
+  </g>
+
+  <!-- ================= ETAPA 4: DELTA LAKE ================= -->
+  <g transform="translate(1350, 240)" filter="url(#shadow)">
+    <rect width="600" height="860" rx="16" fill="#131B2E" stroke="#334155" stroke-width="3" />
+    <text x="30" y="60" class="step-title">4. Destino: Delta Lake (Unity Catalog)</text>
+
+    <!-- Tabla Delta Visual -->
+    <g transform="translate(20, 110)">
+      <rect width="560" height="690" rx="12" fill="#070A13" stroke="#334155" stroke-width="3" />
+      
+      <!-- Encabezado de la tabla (Suficientemente espaciado) -->
+      <rect width="560" height="70" rx="12" fill="#1E293B" />
+      <text x="24" y="44" class="table-header">chunk_id</text>
+      <text x="150" y="44" class="table-header" fill="#FFFFFF">texto</text>
+      <text x="340" y="44" class="table-header" fill="#8B5CF6">embeds</text>
+
+      <!-- Fila 1 -->
+      <g transform="translate(0, 70)">
+        <line x1="0" y1="100" x2="560" y2="100" stroke="#1E293B" stroke-width="3" />
+        <text x="24" y="60" class="code-font" font-size="20px">chk_001</text>
+        <text x="150" y="60" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"Para optim..."</text>
+        <text x="340" y="60" class="code-font" fill="#C084FC" font-size="19px">[0.08, -0.4...]</text>
+      </g>
+
+      <!-- Fila 2 -->
+      <g transform="translate(0, 170)">
+        <line x1="0" y1="100" x2="560" y2="100" stroke="#1E293B" stroke-width="3" />
+        <text x="24" y="60" class="code-font" font-size="20px">chk_002</text>
+        <text x="150" y="60" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"de Spark..."</text>
+        <text x="340" y="60" class="code-font" fill="#C084FC" font-size="19px">[-0.12, 0.9...]</text>
+      </g>
+
+      <!-- Fila 3 -->
+      <g transform="translate(0, 270)">
+        <line x1="0" y1="100" x2="560" y2="100" stroke="#1E293B" stroke-width="3" />
+        <text x="24" y="60" class="code-font" font-size="20px">chk_003</text>
+        <text x="150" y="60" font-family="'Inter', sans-serif" fill="#E2E8F0" font-size="19px">"debe veri..."</text>
+        <text x="340" y="60" class="code-font" fill="#C084FC" font-size="19px">[0.03, -0.1...]</text>
+      </g>
+
+      <!-- Beneficios de Delta Lake en RAG -->
+      <g transform="translate(25, 390)">
+        <rect width="510" height="270" rx="8" fill="#1E293B" stroke="#334155" stroke-width="2" />
+        <text x="30" y="52" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="19px">✓ ACID: Updates incrementales</text>
+        <text x="30" y="104" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="19px">✓ Predicate Pushdown en metadata</text>
+        <text x="30" y="156" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="19px">✓ Time Travel para auditar calidad</text>
+        <text x="30" y="208" font-family="'Inter', sans-serif" font-weight="700" fill="#2DD4BF" font-size="19px">✓ Integrado a Databricks Vector Search</text>
+      </g>
+    </g>
+  </g>
+</svg>

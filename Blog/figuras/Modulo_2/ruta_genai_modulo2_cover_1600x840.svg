@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 840" width="1600" height="840">
+  <defs>
+    <!-- Importación de fuentes de Google -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&amp;family=Inter:wght@300;400;600&amp;display=swap');
+      .title { font-family: 'Outfit', sans-serif; font-weight: 800; fill: #FFFFFF; font-size: 72px; letter-spacing: -2px; }
+      .badge { font-family: 'Inter', sans-serif; font-weight: 600; fill: #2DD4BF; font-size: 20px; letter-spacing: 1px; }
+    </style>
+
+    <!-- 8 Colores del Tema Databricks/Mosaic -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070A13" />       <!-- 1. Fondo base muy oscuro -->
+      <stop offset="50%" stop-color="#0F172A" />      <!-- 2. Fondo intermedio slate/navy -->
+      <stop offset="100%" stop-color="#18182B" />     <!-- 3. Fondo cálido de contraste -->
+    </linearGradient>
+    <linearGradient id="purple-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" />       <!-- 4. Morado brillante -->
+      <stop offset="100%" stop-color="#7C3AED" />     <!-- 5. Morado profundo -->
+    </linearGradient>
+    <linearGradient id="teal-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />       <!-- 6. Teal brillante -->
+      <stop offset="100%" stop-color="#0D9488" />     <!-- 7. Teal apagado/médium -->
+    </linearGradient>
+    <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.10" />
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0.02" />
+    </linearGradient>
+
+    <!-- Filtros de Sombra / Resplandor / Desenfoque -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="30" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="blur-bg" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+  </defs>
+
+  <!-- Fondo Principal -->
+  <rect width="1600" height="840" fill="url(#bg-grad)" />
+
+  <!-- Destellos de Luz de Fondo -->
+  <circle cx="1450" cy="150" r="350" fill="url(#glow-grad)" filter="url(#glow)" />
+  <circle cx="150" cy="680" r="250" fill="url(#glow-grad)" filter="url(#glow)" />
+
+  <!-- Ondas Decorativas en el Fondo -->
+  <path d="M-100,640 C300,740 600,560 1000,680 C1300,770 1500,690 1700,730 L1700,900 L-100,900 Z" fill="#131B2E" opacity="0.5" />
+  <path d="M-100,670 C400,770 700,590 1100,710 C1350,800 1550,720 1750,760 L1750,900 L-100,900 Z" fill="url(#glow-grad)" />
+  <path d="M-100,670 C400,770 700,590 1100,710 C1350,800 1550,720 1750,760" fill="none" stroke="url(#purple-primary)" stroke-width="4" filter="url(#glow)" />
+  <path d="M-100,695 C350,795 650,615 1050,735 C1300,825 1500,745 1700,785" fill="none" stroke="url(#teal-primary)" stroke-width="2" />
+
+  <!-- Ilustración Representativa Centrada y Agrandada -->
+  <g transform="translate(560, 160)">
+    <!-- Documentos del Fondo (Efecto Desenfocado / Stacked) -->
+    <rect x="-80" y="-30" width="380" height="520" rx="16" fill="#1E293B" stroke="#475569" stroke-width="2" opacity="0.3" filter="url(#blur-bg)" transform="rotate(-12, 190, 260)" />
+    <rect x="80" y="-10" width="380" height="520" rx="16" fill="#1E293B" stroke="#475569" stroke-width="2" opacity="0.25" filter="url(#blur-bg)" transform="rotate(15, 190, 260)" />
+
+    <!-- Caja del Documento Base Principal -->
+    <rect width="380" height="520" rx="16" fill="#131B2E" stroke="#475569" stroke-width="3" opacity="0.95" />
+    <text x="40" y="60" font-family="'Outfit', sans-serif" font-weight="600" fill="#94A3B8" font-size="24px">Documento Fuente</text>
+    <line x1="40" y1="85" x2="340" y2="85" stroke="#334155" stroke-width="3" />
+    
+    <!-- Líneas de texto simuladas -->
+    <line x1="40" y1="125" x2="300" y2="125" stroke="#475569" stroke-width="8" stroke-linecap="round" />
+    <line x1="40" y1="155" x2="340" y2="155" stroke="#475569" stroke-width="8" stroke-linecap="round" />
+    <line x1="40" y1="185" x2="250" y2="185" stroke="#475569" stroke-width="8" stroke-linecap="round" />
+    
+    <!-- Chunks Fragmentados Saliendo del Documento -->
+    <!-- Chunk 1: Violeta -->
+    <g transform="translate(60, 230)" filter="url(#glow)">
+      <rect width="340" height="80" rx="12" fill="url(#purple-primary)" stroke="#FFFFFF" stroke-width="1.5" />
+      <text x="25" y="47" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="19px">Chunk 1 (Tokens 0-200)</text>
+    </g>
+
+    <!-- Chunk 2: Teal -->
+    <g transform="translate(100, 330)" filter="url(#glow)">
+      <rect width="340" height="80" rx="12" fill="url(#teal-primary)" stroke="#FFFFFF" stroke-width="1.5" />
+      <text x="25" y="47" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="19px">Chunk 2 (Tokens 160-360)</text>
+    </g>
+
+    <!-- Chunk 3: Muted Navy/Indigo -->
+    <g transform="translate(140, 430)" filter="url(#glow)">
+      <rect width="340" height="80" rx="12" fill="#1E293B" stroke="#4F46E5" stroke-width="2.5" />
+      <text x="25" y="47" font-family="'Inter', sans-serif" font-weight="600" fill="#FFFFFF" font-size="19px">Chunk 3 (Tokens 320-520)</text>
+    </g>
+
+    <!-- Línea con flecha decorativa -->
+    <path d="M15,185 C-45,230 -10,270 50,270" fill="none" stroke="#2DD4BF" stroke-width="3" stroke-dasharray="6 6" />
+    <polygon points="45,264 55,270 45,276" fill="#2DD4BF" />
+  </g>
+</svg>
