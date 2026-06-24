@@ -134,6 +134,8 @@ En Databricks, puedes crear dos tipos de índices vectoriales según la arquitec
   2. **Self-Managed Embeddings (Autoadministrados):** Tú calculas los vectores en tu pipeline de Spark y los guardas en una columna de la tabla Delta. El índice solo se encarga de sincronizarlos de forma incremental.
 * **Direct Vector Access Index (No administrado):** No está enlazado a una tabla Delta. El desarrollador debe calcular los embeddings manualmente en su código y subirlos al índice mediante la API.
 
+![Modelos de Generación de Embeddings Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Modelos%20de%20Generaci%C3%B3n%20de%20Embeddings%20Dark.png)
+
 ### Manejo de borrados en la indexación (Hard vs. Soft Deletes)
 Es crucial saber cómo se propagan las eliminaciones de documentos al índice vectorial:
 * **Hard Delete:** Si eliminas físicamente una fila de la tabla Delta Gold (`DELETE FROM`), la sincronización de Vector Search eliminará de inmediato ese vector del índice.
