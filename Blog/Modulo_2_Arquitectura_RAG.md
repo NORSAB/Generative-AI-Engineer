@@ -91,34 +91,50 @@ Ajustar el tamaño de los fragmentos y su solapamiento es un juego de equilibrio
 
 ---
 
-## 4. Almacenamiento y gobernanza en Delta Lake
+## 4. Arquitectura Medallion y Gobernanza en Delta Lake
 
-Cuando los fragmentos ya están listos, el estándar de Databricks consiste en organizarlos bajo la **Arquitectura Medallion** en **Delta Lake** y controlarlos con **Unity Catalog**:
+El almacenamiento de datos en la plataforma de Databricks sigue la estructura Medallion. Esta separación lógica nos ayuda a depurar y controlar la información que entra a nuestro buscador vectorial:
 
 ![Pipeline de Ingesta Delta](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/figura_2_pipeline_ingesta_delta.png)
 
-### Por qué Delta Lake es la mejor opción para RAG:
-* **predicate Pushdown:** Permite filtrar metadatos de forma ultra rápida antes de hacer la búsqueda por vectores (ej. consultar únicamente chunks donde `departamento = 'HR'`).
-* **Actualizaciones Incrementales:** Si un manual se actualiza, modificas solo sus fragmentos sin tener que reprocesar o reescribir todo el corpus de la empresa.
-* **Viaje en el Tiempo (Time Travel):** Guarda el histórico de cambios, lo que ayuda a auditar qué datos estaban cargados si el modelo alucina o comete un error en producción.
+1. **Tabla Bronze (Crudo/Raw):** Ingesta inicial de los archivos mediante **Auto Loader** (usando `format("cloudFiles")` y `cloudFiles.format("binaryFile")`). Aquí guardamos los archivos PDF o binarios tal como vienen de la nube, con su nombre, tamaño y fecha.
+2. **Tabla Silver (Limpio):** Almacena el texto extraído y normalizado. Se aplican herramientas de OCR (como Tesseract en MLflow) o librerías de parseo (como PyMuPDF) para eliminar el código HTML y las marcas vacías.
+3. **Tabla Gold (Indexado RAG):** Contiene los fragmentos finales divididos en chunks, sus embeddings vectoriales y todos los metadatos de búsqueda estructurados (URI original, autor, permisos).
 
-### Seguridad y permisos con Unity Catalog
-Unity Catalog gestiona el control de accesos basado en roles (RBAC) y la trazabilidad del dato (lineage). Esto garantiza que el motor de búsqueda vectorial respete los permisos del archivo original: si un usuario de ventas no tiene permisos para leer el manual financiero de la empresa en Unity Catalog, el buscador nunca le va a recuperar fragmentos de ese manual.
+### ¿Por qué Delta Lake es crítico en RAG?
+* **predicate Pushdown (Filtros rápidos):** Permite filtrar los metadatos de la tabla Gold de forma veloz antes de hacer la búsqueda por vectores. Si buscas solo manuales del año 2026, Spark descarta el resto en la tabla Delta antes de comparar embeddings.
+* **Time Travel (Auditoría):** Guarda el historial completo de cambios de la tabla. Si tu modelo empieza a alucinar hoy, puedes usar Time Travel para ver exactamente qué archivos estaban indexados ayer a las 3:00 PM y comparar versiones.
+* **Actualizaciones transaccionales (ACID):** Permite hacer un `DELETE` de los chunks de un manual viejo o un `UPDATE` de un fragmento modificado de forma segura, sin tener que borrar e indexar de nuevo toda tu base de datos.
+
+### Seguridad nativa con Unity Catalog
+Unity Catalog hereda los permisos de acceso de los archivos originales. Al sincronizar la tabla Gold con el índice de Vector Search, la búsqueda respeta de forma automática el control de accesos basado en roles (RBAC). Si un empleado de ventas hace una pregunta al bot, el buscador vectorial filtrará los resultados para mostrarle únicamente fragmentos de archivos a los que tiene permiso de lectura en Unity Catalog.
 
 ---
 
-## 5. El embudo de búsqueda: Vector Search y Reranking
+## 5. El motor de búsqueda: Vector Search y Reranking
 
-La búsqueda vectorial busca coincidencias matemáticas calculando la distancia coseno de los embeddings. Es excelente para encontrar de todo rápido (alto **Recall**), pero a menudo arrastra demasiado ruido (baja **Precision**).
+### Métricas de Similitud Vectorial
+En el examen te evaluarán cuándo utilizar cada métrica en Databricks Vector Search:
+* **Distancia Coseno (Cosine Distance):** Mide el ángulo entre dos vectores. Ignora el tamaño del documento, enfocándose solo en la dirección del significado. Es la métrica por defecto y más recomendada para RAG.
+* **Producto Punto (Dot Product):** Mide la dirección y la longitud. Es la más rápida de calcular, pero **exige** que los embeddings estén normalizados (longitud igual a 1). Si usas modelos como OpenAI u Cohere, es la opción ideal.
+* **Distancia Euclidiana (L2):** Mide la distancia en línea recta entre dos puntos. Se usa poco en texto, ya que penaliza fuertemente a los documentos largos.
 
-Para solucionar este dilema en sistemas de producción, aplicamos un embudo en dos fases usando un **Reranker**:
+### Sincronización del Índice de Vector Search
+En Databricks, puedes crear dos tipos de índices vectoriales según la arquitectura del sistema:
+* **Delta Sync Index (Administrado):** Se conecta a tu tabla Delta Gold en Unity Catalog. Databricks se encarga de sincronizar y calcular los embeddings de forma automática cada vez que la tabla Delta Gold recibe nuevos registros, garantizando una actualización incremental transparente.
+* **Direct Vector Access Index (No administrado):** No está enlazado a una tabla Delta. El desarrollador debe calcular los embeddings manualmente en su código y subirlos al índice mediante la API.
+
+### Reranking: Resolviendo el dilema de Precision vs. Recall
+La búsqueda vectorial es excelente encontrando información relevante rápidamente (alto **Recall**), pero suele mezclar ruido irrelevante (baja **Precision**). Pasar 100 fragmentos crudos al prompt satura la ventana de contexto y confunde al LLM.
+
+Para solucionar esto, aplicamos un embudo en dos fases:
 
 ![Mejora de la Búsqueda Vectorial con Reranking Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Mejora%20de%20la%20B%C3%BAsqueda%20Vectorial%20con%20Reranking%20Dark.png)
 
-1. **Primera etapa: Similitud Vectorial Rápida (Top-100):** Hacemos una consulta rápida por distancia coseno en la base de datos vectorial para quedarnos con 100 candidatos. Es veloz pero imprecisa.
-2. **Segunda etapa: Re-ranking Semántico (Top-5):** Enviamos los 100 fragmentos candidatos a un modelo **Cross-Encoder** (el Reranker), que calcula la relación semántica exacta entre la pregunta del usuario y cada fragmento. De ahí, extrae los 5 mejores para introducirlos en el prompt.
+1. **Primera etapa (Búsqueda Vectorial Rápida - Top-100):** Filtramos rápidamente la base de datos usando similitud de coseno para recuperar 100 candidatos. Es un paso veloz pero con ruido.
+2. **Segunda etapa (Re-ranking Semántico - Top-5):** Pasamos los 100 candidatos por un modelo **Cross-Encoder** (Reranker). Este evalúa la pregunta del usuario y el fragmento juntos en una red neuronal, calculando una puntuación semántica exacta. Seleccionamos únicamente los 5 fragmentos con mayor puntuación para construir el prompt final.
 
-Este flujo de embudo optimiza el espacio de contexto del LLM y disminuye los errores y costos, tal como ilustra este diagrama de métricas:
+Este embudo optimiza el prompt, ahorra costos de tokens y reduce drásticamente las alucinaciones del modelo:
 
 ![Precision y Recall RAG Funnel](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/figura_3_precision_recall_rag.png)
 
