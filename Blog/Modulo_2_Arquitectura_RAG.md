@@ -21,7 +21,7 @@ Ingresar datos sin depurar a un sistema de búsqueda vectorial garantiza el frac
 
 El proceso de preparación de los datos sigue un flujo lineal de cinco etapas clave:
 
-![Pipeline de Limpieza de Contenido](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Pipeline%20de%20Limpieza%20de%20Contenido.png)
+![Pipeline de Limpieza de Contenido Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Pipeline%20de%20Limpieza%20de%20Contenido%20Dark.png)
 
 1. **Extracción Raw:** Ingestamos archivos crudos como PDFs digitales, documentos de texto o páginas HTML directamente desde Cloud Storage hacia una tabla Delta a nivel Bronze. Para automatizar este paso de forma incremental, usamos **Databricks Auto Loader**, que detecta nuevos archivos tan pronto como llegan.
 2. **Filtro de Ruido:** Aplicamos funciones de Spark y expresiones regulares (Regex) para eliminar etiquetas HTML, scripts, números de página y disclaimers legales repetitivos (boilerplate). Si no limpiamos esto, el buscador vectorial puede considerar estos textos comunes como relevantes para consultas legítimas de los usuarios.
@@ -73,7 +73,7 @@ Es la estrategia más avanzada. Utiliza un modelo de embeddings para calcular la
 
 Para entender mejor estas estrategias desde el punto de vista del diseño de sistemas, podemos organizarlas según su **Complejidad de Implementación** y su **Criterio de Corte**:
 
-![Matriz de Fragmentación RAG](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Matriz%20de%20Fragmentaci%C3%B3n%20RAG.png)
+![Matriz de Fragmentación RAG Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Matriz%20de%20Fragmentaci%C3%B3n%20RAG%20Dark.png)
 
 ---
 
@@ -113,7 +113,7 @@ La búsqueda vectorial tradicional devuelve fragmentos basados en similitud mate
 
 Para resolver esto de forma eficiente en producción, implementamos un flujo de dos etapas con un **Reranker**:
 
-![Mejora de la Búsqueda Vectorial con Reranking](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Mejora%20de%20la%20B%C3%BAsqueda%20Vectorial%20con%20Reranking.png)
+![Mejora de la Búsqueda Vectorial con Reranking Dark](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_2/Mejora%20de%20la%20B%C3%BAsqueda%20Vectorial%20con%20Reranking%20Dark.png)
 
 1. **Etapa 1: Búsqueda Vectorial Rápida (Top-100):** Realizamos una consulta ágil usando distancia coseno sobre la base de datos vectorial. Esto nos da un conjunto amplio de 100 candidatos. Es rápido pero puede contener fragmentos irrelevantes que solo comparten palabras clave.
 2. **Etapa 2: Re-ranking Semántico (Top-5):** Enviamos los 100 candidatos a un modelo **Cross-Encoder** (Reranker) que evalúa la relación semántica exacta entre la pregunta del usuario y cada fragmento. Este paso reorganiza la lista y selecciona solo los 5 mejores fragmentos para el prompt final del LLM.
