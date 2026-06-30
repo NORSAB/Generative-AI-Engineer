@@ -24,24 +24,7 @@ Para entender la arquitectura de un agente, primero debemos contrastarla con un 
 
 El motor de un agente se basa en el bucle **Reasoning-Action (ReAct)**:
 
-```
-[Usuario ingresa consulta]
-       │
-       ▼
- ┌───────────┐
- │  Pensar   │ ◄────────────────────────┐
- └─────┬─────┘                          │
-       ▼                                │
- ┌───────────┐                          │
- │  Actuar   │ (Llamar herramienta)     │ (Repetir si es necesario)
- └─────┬─────┘                          │
-       ▼                                │
- ┌───────────┐                          │
- │ Observar  │ (Analizar resultado) ────┘
- └─────┬─────┘
-       ▼ (Objetivo cumplido)
-[Entregar respuesta final]
-```
+![El Bucle de Ejecución del Agente (ReAct Loop)](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_3/Ciclo%20iterativo%20para%20razonar%2C%20ejecutar%20herramientas%20y%20responder.png)
 
 Este comportamiento dinámico introduce un gran desafío de costos y control: si el agente se confunde o una herramienta devuelve un error, el sistema puede entrar en un bucle infinito de llamadas al LLM. Por lo tanto, en producción es obligatorio configurar un **límite máximo de iteraciones** (típicamente entre 5 y 10 pasos) para abortar la ejecución de forma segura.
 
@@ -99,6 +82,8 @@ spark.udf.register("catalog_prod.inventario.verificar_inventario_producto", veri
 > [!IMPORTANT]
 > Para el examen, recuerda que las descripciones (`COMMENT` y docstrings) y las anotaciones de tipo (`type hints`) no son documentación decorativa. El LLM depende enteramente de ellas para entender la semántica de la herramienta y realizar la **llamada de funciones (Tool Calling)** de forma correcta.
 
+![Flujo de Traducción Semántica de la Herramienta](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_3/Flujo%20de%20Traducci%C3%B3n%20Sem%C3%A1ntica%20de%20la%20Herramienta.png)
+
 ---
 
 ## 3. Desarrollo de Agentes con Mosaic AI Agent Framework
@@ -109,23 +94,7 @@ spark.udf.register("catalog_prod.inventario.verificar_inventario_producto", veri
 
 El framework permite estructurar la lógica del agente enlazando el modelo de lenguaje con las funciones registradas de la siguiente manera:
 
-```
-                  ┌───────────────────────────────────────────────┐
-                  │          Mosaic AI Agent Framework            │
-                  │                                               │
-                  │   ┌─────────────┐            ┌────────────┐   │
-  Consulta ──────►│   │     LLM     │◄──────────►│   Agente   │   │
-  del Usuario     │   │ (Inferencia)│            │  Orquest.  │   │
-                  │   └─────────────┘            └─────┬──────┘   │
-                  └────────────────────────────────────│──────────┘
-                                                       │
-                                  ┌────────────────────┴────────────────────┐
-                                  ▼                                         ▼
-                     ┌─────────────────────────┐               ┌─────────────────────────┐
-                     │   Unity Catalog Tool    │               │    Vector Search RAG    │
-                     │  (Función SQL / Python) │               │   (Base Conocimiento)   │
-                     └─────────────────────────┘               └─────────────────────────┘
-```
+![Arquitectura de Integración de Mosaic AI Agents](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_3/figura_1_arquitectura_agente.png)
 
 El flujo técnico funciona así:
 1.  El usuario envía una consulta al agente.
@@ -148,19 +117,9 @@ Depurar un agente de IA en desarrollo o monitorearlo en producción es sumamente
 
 Para responder a esto sin adivinar, Databricks integra **MLflow Tracing**, una herramienta de trazabilidad gráfica diseñada específicamente para visualizar la ejecución paso a paso de aplicaciones GenAI complejas.
 
-```
-┌────────────────────────────────────────────────────────┐
-│ MLflow Tracing Visualizer                              │
-├────────────────────────────────────────────────────────┤
-│ ▼ agent_run (2.4s)                                     │
-│   ├── get_user_query [input: "Precio del producto 12"] │
-│   ├── ▼ retrieve_context (1.1s)                        │
-│   │   └── vector_search [query: "producto 12"] (0.8s)  │
-│   ├── ▼ execute_tool: verificar_inventario (0.9s)     │
-│   │   └── uc_function_call [product_id: 12]            │
-│   └── generate_final_response (0.4s) [output: "En st.."]│
-└────────────────────────────────────────────────────────┘
-```
+![Simulacro de Trace en MLflow](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_3/figura_2_ejemplo_trace_mlflow.png)
+
+![Estructura de una Traza en MLflow](https://raw.githubusercontent.com/NORSAB/Generative-AI-Engineer/main/Blog/figuras/Modulo_3/Estructura%20de%20una%20Traza%20en%20MLflow.png)
 
 ### ¿Qué información captura MLflow Tracing?
 
