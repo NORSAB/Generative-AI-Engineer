@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generative AI Engineer | Databricks Certification Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared-style.css"/>
+  <style>
+    header h1{background:linear-gradient(135deg,#fff 0%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .progress-bar{background:linear-gradient(90deg,#8b5cf6,#c084fc)}
+  </style>
+</head>
+<body>
+  <div id="bg-canvas-container"></div>
+  <div class="container">
+    <a href="../index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Volver al Hub
+    </a>
+    <header>
+      <span class="title-badge">CERTIFIED GENERATIVE AI ENGINEER ASSOCIATE</span>
+      <h1>Generative AI Engineer</h1>
+      <p class="text-muted">Ruta de Estudio y Publicaciones LinkedIn — Databricks 2026</p>
+      <div class="progress-info"><span>Progreso General</span><span id="overall-percentage">0%</span></div>
+      <div class="progress-container"><div class="progress-bar" id="main-progress"></div></div>
+    </header>
+    <main id="phases-container" class="phases-grid"></main>
+  </div>
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+  <footer><div class="container"><p>Norman Sabillón · Generative AI Engineer · 2026</p></div></footer>
+  <script src="../shared-engine.js"></script>
+  <script src="data.js"></script>
+</body>
+</html>
