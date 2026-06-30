@@ -33,8 +33,6 @@ Se especifican los recursos visuales en alta resolución (`figuras/Modulo_3/`) c
   * **Action:** LLM selects a specific tool and defines its execution parameters.
   * **Observation:** The orchestrator runs the tool and inputs the result back to the LLM.
   * **Iteration Limit:** Infinite loops are mitigated by setting a hard limit on execution cycles (e.g., max 5 loops) to control token costs.
-* **Visual Asset to Drag-and-Drop:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_3\Iterative loop to reason, execute tools and respond.png`
 
 ---
 
@@ -99,8 +97,6 @@ Se especifican los recursos visuales en alta resolución (`figuras/Modulo_3/`) c
   * **Key Metadatas Captured:**
     * Inputs, outputs, and latencies for each tool call and LLM generation.
     * Cumulative token consumption to trace operational costs.
-* **Visual Asset to Drag-and-Drop:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_3\Structure of an MLflow Trace.png`
 
 ---
 
@@ -163,8 +159,6 @@ Se especifican los recursos visuales en alta resolución (`figuras/Modulo_3/`) c
   * **Actuar (Action):** El LLM decide qué herramienta usar y extrae sus parámetros.
   * **Observar (Observation):** El orquestador ejecuta la herramienta y le devuelve el resultado al LLM.
   * **Control de Costos:** Se configura un límite máximo de iteraciones (ej. 5) para evitar bucles infinitos por fallas.
-* **Imagen a Arrastrar:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_3\Ciclo iterativo para razonar, ejecutar herramientas y responder.png`
 
 ---
 
@@ -229,8 +223,6 @@ Se especifican los recursos visuales en alta resolución (`figuras/Modulo_3/`) c
   * **Métricas Registradas:**
     * Entradas, salidas y latencia de cada herramienta e inferencia intermedia.
     * Consumo de tokens acumulado para auditar costos.
-* **Imagen a Arrastrar:**
-  `D:\2026\Databricks\Roles\03_Generative_AI_Engineer\Blog\figuras\Modulo_3\Estructura de una Traza en MLflow.png`
 
 ---
 
