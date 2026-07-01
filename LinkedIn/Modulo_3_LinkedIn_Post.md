@@ -1,39 +1,22 @@
-# Publicación de LinkedIn — Módulo 3: Desarrollo de Agentes de IA
+After focusing on RAG ingestion last week, this week I dived into the next frontier of enterprise GenAI: AI Agents and tools integration. In production systems, static retrievers are no longer enough. We need agents that can make decisions, call APIs, and execute secure tasks based on user intent. Building autonomous agents requires strong orchestration, robust tools governance, and complete execution tracing.
 
-Este archivo contiene el texto optimizado y humanizado en español para tu publicación en LinkedIn.
+This week, for the Databricks Generative AI Engineer certification, I analyzed the core concepts of Module 3:
+- Unity Catalog Functions: Using Python and SQL functions as secure, role-based tools for agents. The LLM reads COMMENT metadata to perform semantic tool calling.
+- Mosaic AI Agent Framework: The native platform to deploy and package agents built with LangChain, LlamaIndex, or custom Python code.
+- MLflow Tracing: Visualizing execution paths, tracking spans, debugging latencies, and auditing token costs.
 
----
+You can read the deep-dives here:
+Module 0 (From BI to ML): https://normansabillon.hashnode.dev/qu-pasa-realmente-cuando-le-hablas-a-un-llm
+Module 1 (Advanced Prompt Engineering): https://normansabillon.hashnode.dev/m-dulo-1-prompt-engineering-avanzado-dise-ando-entradas-para-llms-en-producci-n
+Module 2 (RAG Ingestion & Architecture): https://normansabillon.hashnode.dev/m-dulo-2-arquitectura-rag-fragmentaci-n-limpieza-de-datos-e-indexaci-n-en-delta-lake
+Module 3 (AI Agents & Tools Integration): https://normansabillon.hashnode.dev/modulo-3-desarrollo-agentes-ia-mosaic-ai-mlflow
 
-### Versión para Publicación
-
-Los chatbots informativos que solo responden preguntas basadas en PDFs son cosa del pasado. 
-
-Hoy, el verdadero valor de la Inteligencia Artificial en las empresas está en los **Agentes Autónomos**: sistemas capaces de razonar, decidir qué herramientas necesitan y ejecutar acciones reales de forma segura.
-
-Si estás preparando la certificación **Databricks Certified Generative AI Engineer Associate**, este es uno de los temas más críticos y con mayor peso técnico en el examen.
-
-Aquí te comparto un resumen de cómo estructurar agentes de producción utilizando el ecosistema nativo de Databricks:
-
-💡 **1. Herramientas Gobernadas con Unity Catalog Functions**
-¿Cómo le das acceso seguro a tu agente a bases de datos transaccionales o APIs de la empresa? Registrando funciones de Python o SQL en Unity Catalog. 
-*   **Gobernanza:** Si un usuario no tiene permisos sobre la función, el agente tampoco podrá ejecutarla.
-*   **Auto-documentación:** El LLM lee directamente los comentarios (`COMMENT`) y los tipos de datos de la función en Unity Catalog para entender cuándo y cómo llamarla.
-
-🧠 **2. Mosaic AI Agent Framework**
-Es la infraestructura nativa de Databricks para unificar el ciclo de vida del agente. Te permite orquestar flujos creados con LangChain o código Python nativo y conectarlos directamente a endpoints administrados de inferencia (Model Serving).
-
-🔍 **3. MLflow Tracing: Adiós a la caja negra**
-Depurar un agente dinámico con múltiples pasos de razonamiento es un dolor de cabeza. MLflow Tracing captura de forma automática:
-*   Las entradas y salidas exactas de cada herramienta.
-*   La latencia detallada de cada paso lógico (Spans).
-*   El consumo real de tokens para auditar costos de inferencia.
-Solo necesitas activar `mlflow.langchain.autolog(log_traces=True)` en tu notebook y listo.
-
-⚠️ **Un consejo clave para el examen:** 
-Para evitar cobros descontrolados causados por bucles infinitos en el Reasoning-Action Loop, siempre debes configurar un límite máximo de iteraciones en el orquestador del agente.
+I am also sharing the study carousel below, covering the same topics in both English and Spanish.
 
 ---
 
-¿Ya estás construyendo agentes autónomos en Databricks o sigues en la etapa de RAG simple? Te leo en los comentarios. 👇
+Luego de revisar la ingesta RAG la semana pasada, esta semana nos adentramos en el desarrollo de agentes de IA y la integracion de herramientas en Databricks. Los chatbots estaticos que solo leen documentos se quedan cortos para tareas transaccionales; el valor real en la empresa surge cuando los modelos pueden tomar decisiones logicas, interactuar con APIs y consultar bases de datos de forma segura.
 
-#Databricks #GenerativeAI #AIAgents #MLflow #UnityCatalog #LLMOps #CloudComputing #MachineLearning
+Espero que el contenido del blog y el carrusel de estudio les sirva de guia para la certificacion o para implementar estos flujos en sus equipos. Como manejan la depuracion de agentes dinamicos en sus desarrollos? Usan herramientas graficas como MLflow Tracing o se apoyan en logs personalizados?
+
+#Databricks #GenerativeAI #AIAgents #MLflow #UnityCatalog #LLMOps #MachineLearning #CloudComputing #EmbajadoresQualtop #Qualtop #EmbajadoresSyesoftware #Syesoftware
